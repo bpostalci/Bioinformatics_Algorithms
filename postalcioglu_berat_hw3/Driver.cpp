@@ -18,10 +18,10 @@ struct prg_options
 static const char *help =
     "usage: allalign [option] ... [arg]\n\
 Options and arguments:\n\
---mode    or -m [global | local | aglobal | alocal] : specifies which alignment mode should be used (REQUIRED)\n\
---input   or -i [<filename>.fasta]                  : input FASTA file for sequences (REQUIRED)\n\
---gapopen or -o [num]                               : gap opening penalty for affine gap model, or unit gap cost for naive model (should be numeric)\n\
---gapext  or -e [num]                               : gap extension penalty for affine gap model\n";
+--mode    or -m [global | local | aglobal | alocal]    : specifies which alignment mode should be used (REQUIRED)\n\
+--input   or -i [<filename>.fasta]                     : input FASTA file for sequences (REQUIRED)\n\
+--gapopen or -o [number]                               : gap opening penalty for affine gap model, or unit gap cost for naive model (should be numeric)\n\
+--gapext  or -e [number]                               : gap extension penalty for affine gap model\n";
 
 int score_matrix[4][4] =
   //  a   c   g   t
