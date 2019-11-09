@@ -23,7 +23,7 @@ Options and arguments:\n\
 --gapopen or -o [number]                               : gap opening penalty for affine gap model, or unit gap cost for naive model (should be numeric)\n\
 --gapext  or -e [number]                               : gap extension penalty for affine gap model\n";
 
-int score_matrix[4][4] =
+const int score_matrix[4][4] =
   //  a   c   g   t
     {{2, -3, -3, -3},  // a
      {-3, 2, -3, -3},  // c
@@ -32,7 +32,7 @@ int score_matrix[4][4] =
 
 int main(int argc, char **argv)
 {
-  struct prg_options prg_options;
+  prg_options prg_options;
 
   const char *optstring = "m:i:o:e:"; // --mode, --input, --gapopen, --gapext
   static struct option long_options[] = {
