@@ -1,8 +1,10 @@
 /**
- * @name   sequence alignment program
- * @author Berat Postalcioglu - 21401769 
+ * @description   Sequence alignment program
+ * @author        Berat Postalcioglu - 21401769 
  **/
 
+#include "NeedlemanWunschAlignment.h"
+#include "IOHelper.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string>
@@ -24,7 +26,7 @@ Options and arguments:\n\
 --gapext  or -e [number]                               : gap extension penalty for affine gap model\n";
 
 const int score_matrix[4][4] =
-  //  a   c   g   t
+    //  a   c   g   t
     {{2, -3, -3, -3},  // a
      {-3, 2, -3, -3},  // c
      {-3, -3, 2, -3},  // g
@@ -81,6 +83,18 @@ int main(int argc, char **argv)
       printf("%s", "--mode or -m options must be one of the following arguments [global | local | aglocal | alocal]\n");
       exit(1);
     }
+
+
+    char *s1 = NULL;
+    char *s2 = NULL;
+    char *title1 = NULL;
+    char *title2 = NULL;
+    fill_buffers((char **)&s1, (char **)&s2, (char **)&title1, (char **)&title2, prg_options.input);
+
+    printf("s1 = %s\n", s1);
+    printf("s2 = %s\n", s2);
+    printf("title1 = %s\n", title1);
+    printf("title2 = %s\n", title2);
   }
 
   printf("prg_options.mode = %s\n", prg_options.mode);
