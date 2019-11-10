@@ -81,6 +81,12 @@ int main(int argc, char **argv)
     char *title2 = NULL;
     fill_buffers((char **)&s1, (char **)&s2, (char **)&title1, (char **)&title2, prg_options.input);
 
+    printf("input file            => %s\n", prg_options.input);
+    printf("mode                  => %s\n", prg_options.mode);
+    printf("gap open penalty      => %d\n", prg_options.gapopen);
+    printf("gap extension penalty => %d\n", prg_options.gapext);
+    printf("aligning...\n\n");
+
     if (strcmp(prg_options.mode, "global") == 0)
     {
       needleman_wunsch_align(s1, s2, title1, title2, prg_options.gapopen);
@@ -106,7 +112,6 @@ int main(int argc, char **argv)
     free(s2);
     free(title1);
     free(title2);
-
   }
 
   for (int index = optind; index < argc; index++)
