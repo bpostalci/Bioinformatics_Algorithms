@@ -9,6 +9,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __unix__
+#define linux
+#endif
+
+#if  defined(_WIN32) || defined(_WIN64)
+#define windows
+#endif
+
 #define IS_LINEBREAK(ch) (ch == '\n' || ch == '\r')
 
 void alloc_title_buffer(FILE *fp, char **title)
@@ -100,8 +108,12 @@ void fill_buffers(char **s1, char **s2, char **title1, char **title2, const char
 	while (fgetc(fp) != '>')
 	{
 	}
+#ifdef linux
 	fseek(fp, -1, SEEK_CUR); // back to '>' ch
-
+#endif
+#ifdef windows
+	fseek(fp, 0, SEEK_CUR); // back to '>' ch
+#endif
 	fill_title(fp, (char **)&(*title2));
 
 	// fill s2
