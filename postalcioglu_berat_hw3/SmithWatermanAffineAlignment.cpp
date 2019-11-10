@@ -1,17 +1,18 @@
 /**
- * @description   Needleman-Wunsch algorithm with affine gap scoring (Affine Global Alignment)
+ * @description   Smith-Waterman algorithm with affine gap scoring (Local Affine Alignment)
  * @author        Berat Postalcioglu - 21401769 
  **/
 
-#include "NeedlemanWunschAffineAlignment.h"
+#include "SmithWatermanAffineAlignment.h"
 #include "Typedefs.h"
 #include "ScoreMatrix.h"
 #include "LocalAlignmentCommon.h"
 #include "AlignmentCommon.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-void needleman_wunsch_affine_align(char *s1, char *s2, char *title1, char *title2, int gapopen, int gapext)
+void smith_waterman_affine_alignment(char *s1, char *s2, char *title1, char *title2, int gapopen, int gapext)
 {
     u32 s1_len = strlen(s1);
     u32 s2_len = strlen(s2);
@@ -57,7 +58,6 @@ void needleman_wunsch_affine_align(char *s1, char *s2, char *title1, char *title
         matrix_f[0][i] = matrix_s[0][i].score;
         matrix_e[0][i] = 0;
     }
-
     // iterate
     for (i = 1; i < s1_len + 1; i++)
     {
@@ -66,10 +66,12 @@ void needleman_wunsch_affine_align(char *s1, char *s2, char *title1, char *title
             matrix_e[i][j] = MAX((matrix_e[i][j - 1] + gapext), (matrix_s[i][j - 1].score + gapopen + gapext));
             matrix_f[i][j] = MAX((matrix_f[i - 1][j] + gapext), (matrix_s[i - 1][j].score + gapopen + gapext));
             int match_mismatch = matrix_s[i - 1][j - 1].score + score_matrix[GET_NUM(s1[i - 1])][GET_NUM(s2[j - 1])];
-            matrix_s[i][j].score = max(match_mismatch, matrix_e[i][j], matrix_f[i][j]);
+            matrix_s[i][j].score = four_max(0, match_mismatch, matrix_e[i][j], matrix_f[i][j]);
             matrix_s[i][j].pos = local_get_pos(matrix_s[i][j].score, match_mismatch, matrix_f[i][j], matrix_e[i][j]);
         }
     }
 
-    output_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2, "global-affineGap.aln");
+    // display_matrix(matrix_s, s1_len, s2_len);
+
+    output_local_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2, "local-affineGap.aln");
 }

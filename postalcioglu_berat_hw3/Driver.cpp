@@ -6,6 +6,7 @@
 #include "NeedlemanWunschAlignment.h"
 #include "NeedlemanWunschAffineAlignment.h"
 #include "SmithWatermanAlignment.h"
+#include "SmithWatermanAffineAlignment.h"
 #include "IOHelper.h"
 #include <stdio.h>
 #include <getopt.h>
@@ -94,6 +95,7 @@ int main(int argc, char **argv)
     }
     else if (strcmp(prg_options.mode, "alocal") == 0)
     {
+      smith_waterman_affine_alignment(s1, s2, title1, title2, prg_options.gapopen, prg_options.gapext);
     }
     else
     {

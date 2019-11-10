@@ -6,21 +6,10 @@
 #include "SmithWatermanAlignment.h"
 #include "Typedefs.h"
 #include "ScoreMatrix.h"
-#include "AlignmentCommon.h"
+#include "LocalAlignmentCommon.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-inline char local_get_pos(int score, int match_mismatch, int insertion, int deletion)
-{
-    char ch = GET_POS(score, match_mismatch, insertion, deletion);
-    return ch == '\0' ? 'd' : ch;
-}
-int four_max(int a, int b, int c, int d)
-{
-    int m = max(a, b, c);
-    return d > m ? d : m;
-}
 
 void display_matrix(score_item **matrix, u32 row, u32 col)
 {

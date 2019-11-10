@@ -1,3 +1,8 @@
+/**
+ * @description   score matrix utilities
+ * @author        Berat Postalcioglu - 21401769 
+ **/
+
 #pragma once
 
 #define GET_NUM(ch) (ch == 'A' ? 0 : ch == 'C' ? 1 : ch == 'G' ? 2 : ch == 'T' ? 3 : 0)
