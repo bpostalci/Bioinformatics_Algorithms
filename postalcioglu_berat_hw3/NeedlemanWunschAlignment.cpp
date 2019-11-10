@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 #define MAX(a, b) (a > b ? a : b)
 #define GET_POS(score, match_mismatch, insertion, deletion) ((score == match_mistmatch) ? 'd' : (score == insertion) ? 'u' : (score == deletion) ? 'l' : '\0')
@@ -51,7 +52,7 @@ void display_solution(score_item **matrix, u32 row, u32 col, char *s1, char *s2)
 
     while (i > 0 || j > 0)
     {
-        if (matrix[i][j].pos == '-') // we reached edge
+        if (matrix[i][j].pos == '-') // we reached the edge
         {
             while (j > 0)
             {
@@ -87,8 +88,12 @@ void display_solution(score_item **matrix, u32 row, u32 col, char *s1, char *s2)
         }
     }
 
-    std::cout << s1_stream.str() << std::endl;
-    std::cout << s2_stream.str() << std::endl;
+    std::string s1_str = s1_stream.str();
+    std::reverse(s1_str.begin(), s1_str.end());
+    std::string s2_str = s2_stream.str();
+    std::reverse(s2_str.begin(), s2_str.end());
+    std::cout << s1_str << std::endl;
+    std::cout << s2_str << std::endl;
 }
 
 void needleman_wunsch_align(char *s1, char *s2, int gap_penalty)
@@ -132,6 +137,6 @@ void needleman_wunsch_align(char *s1, char *s2, int gap_penalty)
         }
     }
 
-   // display_matrix(matrix_s, s1_len, s2_len);
+    // display_matrix(matrix_s, s1_len, s2_len);
     display_solution(matrix_s, s1_len, s2_len, s1, s2);
 }
