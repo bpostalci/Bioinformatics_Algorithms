@@ -100,15 +100,14 @@ int main(int argc, char **argv)
     else
     {
       printf("%s", "--mode or -m options must be one of the following arguments [global | local | aglocal | alocal]\n");
-      exit(1);
     }
-  }
 
-  printf("\n\n");
-  printf("prg_options.mode = %s\n", prg_options.mode);
-  printf("prg_options.input = %s\n", prg_options.input);
-  printf("prg_options.gapopen = %d\n", prg_options.gapopen);
-  printf("prg_options.gapext = %d\n", prg_options.gapext);
+    free(s1);
+    free(s2);
+    free(title1);
+    free(title2);
+
+  }
 
   for (int index = optind; index < argc; index++)
   {

@@ -72,4 +72,25 @@ void needleman_wunsch_affine_align(char *s1, char *s2, char *title1, char *title
     }
 
     output_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2, "global-affineGap.aln");
+
+    // free memory
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_s[i]);
+    }
+    free(matrix_s);
+
+    // matrix - E
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_e[i]);
+    }
+    free(matrix_e);
+
+    // matrix - F
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_f[i]);
+    }
+    free(matrix_f);
 }

@@ -11,18 +11,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void display_matrix(score_item **matrix, u32 row, u32 col)
-{
-    for (u32 i = 0; i < row + 1; i++)
-    {
-        for (u32 j = 0; j < col + 1; j++)
-        {
-            printf("%d (%c)\t", matrix[i][j].score, matrix[i][j].pos);
-        }
-        printf("\n");
-    }
-}
-
 void smith_waterman_alignment(char *s1, char *s2, char *title1, char *title2, int gap_penalty)
 {
     u32 s1_len = strlen(s1);
@@ -63,7 +51,12 @@ void smith_waterman_alignment(char *s1, char *s2, char *title1, char *title2, in
         }
     }
 
-    // display_matrix(matrix_s, s1_len, s2_len);
-
     output_local_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2, "local-naiveGap.aln");
+
+    // free memory
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_s[i]);
+    }
+    free(matrix_s);
 }

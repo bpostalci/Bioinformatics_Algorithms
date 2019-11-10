@@ -168,4 +168,6 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, int score, 
 		}
 		fprintf(fp, "\n\n");
 	}
+
+	fclose(fp);
 }
