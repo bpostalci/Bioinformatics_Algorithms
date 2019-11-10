@@ -13,7 +13,7 @@
 #define linux
 #endif
 
-#if  defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 #define windows
 #endif
 
@@ -154,6 +154,20 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, int score, 
 
 	fprintf(fp, "Score = %d\n\n", score);
 
+	// calculate space after titles
+	u32 space = 5;
+	u32 title1_space, title2_space;
+	if (title1_len > title2_len)
+	{
+		title1_space = space;
+		title2_space = (title1_len - title2_len) + space;
+	}
+	else
+	{
+		title2_space = space;
+		title1_space = (title2_len - title1_len) + space;
+	}
+
 	u32 i, j;
 	for (i = 0; i < limit; i++)
 	{
@@ -162,7 +176,10 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, int score, 
 		{
 			fprintf(fp, "%c", title1[j]);
 		}
-		fprintf(fp, "\t");
+		for (j = 0; j < title1_space; j++)
+		{
+			fprintf(fp, " ");
+		}
 		for (j = i * partition_len; j < current_limit; j++)
 		{
 			fprintf(fp, "%c", s1[j]);
@@ -173,7 +190,10 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, int score, 
 		{
 			fprintf(fp, "%c", title2[j]);
 		}
-		fprintf(fp, "\t");
+		for (j = 0; j < title2_space; j++)
+		{
+			fprintf(fp, " ");
+		}
 		for (j = i * partition_len; j < current_limit; j++)
 		{
 			fprintf(fp, "%c", s2[j]);
