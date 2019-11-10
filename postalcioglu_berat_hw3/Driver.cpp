@@ -4,6 +4,7 @@
  **/
 
 #include "NeedlemanWunschAlignment.h"
+#include "NeedlemanWunschAffineAlignment.h"
 #include "IOHelper.h"
 #include <stdio.h>
 #include <getopt.h>
@@ -84,7 +85,8 @@ int main(int argc, char **argv)
     }
     else if (strcmp(prg_options.mode, "aglobal") == 0)
     {
-        }
+      needleman_wunsch_affine_align(s1, s2, title1, title2, prg_options.gapopen, prg_options.gapext);
+    }
     else if (strcmp(prg_options.mode, "local") == 0)
     {
     }

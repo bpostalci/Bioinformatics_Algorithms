@@ -7,26 +7,13 @@
 #include "Typedefs.h"
 #include "ScoreMatrix.h"
 #include "IOHelper.h"
+#include "AlignmentCommon.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sstream>
 #include <iostream>
 #include <algorithm>
-
-#define MAX(a, b) (a > b ? a : b)
-#define GET_POS(score, match_mismatch, insertion, deletion) ((score == match_mistmatch) ? 'd' : (score == insertion) ? 'u' : (score == deletion) ? 'l' : '\0')
-struct score_item
-{
-    int score;
-    char pos;
-};
-
-inline int max(int a, int b, int c)
-{
-    int m = MAX(a, b);
-    return m > c ? m : c;
-}
 
 void display_matrix(score_item **matrix, u32 row, u32 col)
 {
@@ -38,65 +25,6 @@ void display_matrix(score_item **matrix, u32 row, u32 col)
         }
         printf("\n");
     }
-}
-
-void output_result(score_item **matrix, u32 row, u32 col, char *s1, char *s2, char *title1, char *title2)
-{
-    using namespace std;
-
-    string str;
-    str.reserve(row + col);
-    stringstream s1_stream(str);
-    stringstream s2_stream(str);
-    u32 i = row;
-    u32 j = col;
- 
-    printf("Score = %d\n", matrix[i][j].score);
-    while (i > 0 || j > 0)
-    {
-        if (matrix[i][j].pos == '-') // we reached the edge
-        {
-            while (j > 0)
-            {
-                s1_stream << '-';
-                s2_stream << s2[j--];
-            }
-            while (i > 0)
-            {
-                s2_stream << '-';
-                s1_stream << s1[i--];
-            }
-            break;
-        }
-
-        switch (matrix[i][j].pos)
-        {
-        case 'd':
-            s1_stream << s1[i - 1];
-            s2_stream << s2[j - 1];
-            --i;
-            --j;
-            break;
-        case 'u':
-            s1_stream << s1[--i];
-            s2_stream << '-';
-            break;
-        case 'l':
-            s1_stream << '-';
-            s2_stream << s2[--j];
-            break;
-        }
-    }
-
-    string title1_str = string(title1).erase(0, 1);
-    string title2_str = string(title2).erase(0, 1);
-
-    string s1_str = s1_stream.str();
-    reverse(s1_str.begin(), s1_str.end());
-    string s2_str = s2_stream.str();
-    reverse(s2_str.begin(), s2_str.end());
-
-    write_alignment((char *)s1_str.c_str(), (char *)s2_str.c_str(), (char *)title1_str.c_str(), (char *)title2_str.c_str(), "global-naiveGap.aln");
 }
 
 void needleman_wunsch_align(char *s1, char *s2, char *title1, char *title2, int gap_penalty)
@@ -139,6 +67,5 @@ void needleman_wunsch_align(char *s1, char *s2, char *title1, char *title2, int 
         }
     }
 
-    // display_matrix(matrix_s, s1_len, s2_len);
-    output_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2);
+    output_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2, "global-naiveGap.aln");
 }

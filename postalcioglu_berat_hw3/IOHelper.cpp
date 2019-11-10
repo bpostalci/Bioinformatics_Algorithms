@@ -119,7 +119,7 @@ void fill_buffers(char **s1, char **s2, char **title1, char **title2, const char
 	fclose(fp);
 }
 
-void write_alignment(char *s1, char *s2, char *title1, char *title2, const char *filename)
+void write_alignment(char *s1, char *s2, char *title1, char *title2, int score, const char *filename)
 {
 	FILE *fp = NULL;
 	fp = fopen(filename, "w");
@@ -130,6 +130,8 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, const char 
 		exit(1);
 	}
 
+	printf("output file => %s\n", filename);
+
 	u32 partition_len = 60;
 	u32 str_len = strlen(s1); // we assume two strings have equal size
 	u32 title1_len = strlen(title1);
@@ -137,6 +139,8 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, const char 
 
 	u32 limit = (str_len / partition_len) + 1;
 	limit = str_len % partition_len == 0 ? limit - 1 : limit;
+
+	fprintf(fp, "Score = %d\n\n", score);
 
 	u32 i, j;
 	for (i = 0; i < limit; i++)
@@ -162,6 +166,6 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, const char 
 		{
 			fprintf(fp, "%c", s2[j]);
 		}
-		fprintf(fp, "\n");
+		fprintf(fp, "\n\n");
 	}
 }
