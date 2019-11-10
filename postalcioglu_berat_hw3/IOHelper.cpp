@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <string>
-
 #define IS_LINEBREAK(ch) (ch == '\n' || ch == '\r')
 
 void alloc_title_buffer(FILE *fp, char **title)

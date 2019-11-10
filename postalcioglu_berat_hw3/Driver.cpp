@@ -25,12 +25,7 @@ Options and arguments:\n\
 --gapopen or -o [number]                               : gap opening penalty for affine gap model, or unit gap cost for naive model (should be numeric)\n\
 --gapext  or -e [number]                               : gap extension penalty for affine gap model\n";
 
-const int score_matrix[4][4] =
-    //  a   c   g   t
-    {{2, -3, -3, -3},  // a
-     {-3, 2, -3, -3},  // c
-     {-3, -3, 2, -3},  // g
-     {-3, -3, -3, 2}}; // t
+
 
 int main(int argc, char **argv)
 {
@@ -84,7 +79,6 @@ int main(int argc, char **argv)
       exit(1);
     }
 
-
     char *s1 = NULL;
     char *s2 = NULL;
     char *title1 = NULL;
@@ -95,8 +89,11 @@ int main(int argc, char **argv)
     printf("s2 = %s\n", s2);
     printf("title1 = %s\n", title1);
     printf("title2 = %s\n", title2);
+
+    needleman_wunsch_align(s1, s2, prg_options.gapopen);
   }
 
+  printf("\n\n");
   printf("prg_options.mode = %s\n", prg_options.mode);
   printf("prg_options.input = %s\n", prg_options.input);
   printf("prg_options.gapopen = %d\n", prg_options.gapopen);
