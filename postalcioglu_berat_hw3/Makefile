@@ -1,6 +1,6 @@
 c = g++ -O3 -std=c++0x -Wall 
 
-objects = Driver.o IOHelper.o AlignmentCommon.o NeedlemanWunschAlignment.o NeedlemanWunschAffineAlignment.o 
+objects = Driver.o IOHelper.o AlignmentCommon.o NeedlemanWunschAlignment.o NeedlemanWunschAffineAlignment.o SmithWatermanAlignment.o
 alns = global-naiveGap.aln global-affineGap.aln
 exe = allalign
 
@@ -21,6 +21,9 @@ NeedlemanWunschAlignment.o: NeedlemanWunschAlignment.cpp
 
 NeedlemanWunschAffineAlignment.o: NeedlemanWunschAffineAlignment.cpp
 	$(c) -c NeedlemanWunschAffineAlignment.cpp -o NeedlemanWunschAffineAlignment.o
+
+SmithWatermanAlignment.o: SmithWatermanAlignment.cpp
+	$(c) -c SmithWatermanAlignment.cpp -o SmithWatermanAlignment.o
 
 .PHONY: clean
 clean:

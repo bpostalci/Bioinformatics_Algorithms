@@ -9,7 +9,6 @@
 #include "AlignmentCommon.h"
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 void needleman_wunsch_affine_align(char *s1, char *s2, char *title1, char *title2, int gapopen, int gapext)
 {
