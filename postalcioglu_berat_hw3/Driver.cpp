@@ -78,19 +78,13 @@ int main(int argc, char **argv)
     char *title2 = NULL;
     fill_buffers((char **)&s1, (char **)&s2, (char **)&title1, (char **)&title2, prg_options.input);
 
-    printf("s1 = %s\n", s1);
-    printf("s2 = %s\n", s2);
-    printf("title1 = %s\n", title1);
-    printf("title2 = %s\n", title2);
-
     if (strcmp(prg_options.mode, "global") == 0)
     {
-      needleman_wunsch_align(s1, s2, prg_options.gapopen);
+      needleman_wunsch_align(s1, s2, title1, title2, prg_options.gapopen);
     }
     else if (strcmp(prg_options.mode, "aglobal") == 0)
     {
-      
-    }
+        }
     else if (strcmp(prg_options.mode, "local") == 0)
     {
     }

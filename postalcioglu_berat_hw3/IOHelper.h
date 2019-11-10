@@ -6,3 +6,4 @@
 #pragma once
 
 void fill_buffers(char **s1, char **s2, char **title1, char **title2, const char *filename);
+void write_alignment(char *s1, char *s2, char *title1, char *title2, const char *filename);

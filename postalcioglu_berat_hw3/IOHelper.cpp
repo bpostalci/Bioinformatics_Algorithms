@@ -7,6 +7,7 @@
 #include "Typedefs.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define IS_LINEBREAK(ch) (ch == '\n' || ch == '\r')
 
@@ -93,13 +94,15 @@ void fill_buffers(char **s1, char **s2, char **title1, char **title2, const char
 	rewind(fp);
 
 	// get back to second '>' character
-	while(fgetc(fp) != '>')
-	{}
-	while(fgetc(fp) != '>')
-	{}
+	while (fgetc(fp) != '>')
+	{
+	}
+	while (fgetc(fp) != '>')
+	{
+	}
 	fseek(fp, -1, SEEK_CUR); // back to '>' ch
 
-	fill_title(fp, (char**)&(*title2));
+	fill_title(fp, (char **)&(*title2));
 
 	// fill s2
 	i = 0;
@@ -114,4 +117,51 @@ void fill_buffers(char **s1, char **s2, char **title1, char **title2, const char
 	*(*s2 + i) = '\0';
 
 	fclose(fp);
+}
+
+void write_alignment(char *s1, char *s2, char *title1, char *title2, const char *filename)
+{
+	FILE *fp = NULL;
+	fp = fopen(filename, "w");
+
+	if (fp == NULL)
+	{
+		printf("output file '%s' cannot be opened. exiting...\n", filename);
+		exit(1);
+	}
+
+	u32 partition_len = 60;
+	u32 str_len = strlen(s1); // we assume two strings have equal size
+	u32 title1_len = strlen(title1);
+	u32 title2_len = strlen(title2);
+
+	u32 limit = (str_len / partition_len) + 1;
+	limit = str_len % partition_len == 0 ? limit - 1 : limit;
+
+	u32 i, j;
+	for (i = 0; i < limit; i++)
+	{
+		u32 current_limit = (str_len > (i + 1) * partition_len ? (i + 1) * partition_len : str_len);
+		for (j = 0; j < title1_len; j++)
+		{
+			fprintf(fp, "%c", title1[j]);
+		}
+		fprintf(fp, "\t");
+		for (j = i * partition_len; j < current_limit; j++)
+		{
+			fprintf(fp, "%c", s1[j]);
+		}
+		fprintf(fp, "\n");
+
+		for (j = 0; j < title2_len; j++)
+		{
+			fprintf(fp, "%c", title2[j]);
+		}
+		fprintf(fp, "\t");
+		for (j = i * partition_len; j < current_limit; j++)
+		{
+			fprintf(fp, "%c", s2[j]);
+		}
+		fprintf(fp, "\n");
+	}
 }

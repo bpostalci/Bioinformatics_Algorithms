@@ -6,6 +6,7 @@
 #include "NeedlemanWunschAlignment.h"
 #include "Typedefs.h"
 #include "ScoreMatrix.h"
+#include "IOHelper.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -39,17 +40,18 @@ void display_matrix(score_item **matrix, u32 row, u32 col)
     }
 }
 
-void display_solution(score_item **matrix, u32 row, u32 col, char *s1, char *s2)
+void output_result(score_item **matrix, u32 row, u32 col, char *s1, char *s2, char *title1, char *title2)
 {
-    std::string str;
+    using namespace std;
+
+    string str;
     str.reserve(row + col);
-    std::stringstream s1_stream(str);
-    std::stringstream s2_stream(str);
+    stringstream s1_stream(str);
+    stringstream s2_stream(str);
     u32 i = row;
     u32 j = col;
-
+ 
     printf("Score = %d\n", matrix[i][j].score);
-
     while (i > 0 || j > 0)
     {
         if (matrix[i][j].pos == '-') // we reached the edge
@@ -57,7 +59,7 @@ void display_solution(score_item **matrix, u32 row, u32 col, char *s1, char *s2)
             while (j > 0)
             {
                 s1_stream << '-';
-                s2_stream << s1[j--];
+                s2_stream << s2[j--];
             }
             while (i > 0)
             {
@@ -76,27 +78,28 @@ void display_solution(score_item **matrix, u32 row, u32 col, char *s1, char *s2)
             --j;
             break;
         case 'u':
-            s1_stream << s1[i - 1];
+            s1_stream << s1[--i];
             s2_stream << '-';
-            --i;
             break;
         case 'l':
             s1_stream << '-';
-            s2_stream << s2[j - 1];
-            --j;
+            s2_stream << s2[--j];
             break;
         }
     }
 
-    std::string s1_str = s1_stream.str();
-    std::reverse(s1_str.begin(), s1_str.end());
-    std::string s2_str = s2_stream.str();
-    std::reverse(s2_str.begin(), s2_str.end());
-    std::cout << s1_str << std::endl;
-    std::cout << s2_str << std::endl;
+    string title1_str = string(title1).erase(0, 1);
+    string title2_str = string(title2).erase(0, 1);
+
+    string s1_str = s1_stream.str();
+    reverse(s1_str.begin(), s1_str.end());
+    string s2_str = s2_stream.str();
+    reverse(s2_str.begin(), s2_str.end());
+
+    write_alignment((char *)s1_str.c_str(), (char *)s2_str.c_str(), (char *)title1_str.c_str(), (char *)title2_str.c_str(), "global-naiveGap.aln");
 }
 
-void needleman_wunsch_align(char *s1, char *s2, int gap_penalty)
+void needleman_wunsch_align(char *s1, char *s2, char *title1, char *title2, int gap_penalty)
 {
     u32 s1_len = strlen(s1);
     u32 s2_len = strlen(s2);
@@ -137,5 +140,5 @@ void needleman_wunsch_align(char *s1, char *s2, int gap_penalty)
     }
 
     // display_matrix(matrix_s, s1_len, s2_len);
-    display_solution(matrix_s, s1_len, s2_len, s1, s2);
+    output_result(matrix_s, s1_len, s2_len, s1, s2, title1, title2);
 }
