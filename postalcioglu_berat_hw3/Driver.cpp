@@ -7,7 +7,9 @@
 #include "IOHelper.h"
 #include <stdio.h>
 #include <getopt.h>
-#include <string>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 struct prg_options
 {
@@ -24,8 +26,6 @@ Options and arguments:\n\
 --input   or -i [<filename>.fasta]                     : input FASTA file for sequences (REQUIRED)\n\
 --gapopen or -o [number]                               : gap opening penalty for affine gap model, or unit gap cost for naive model (should be numeric)\n\
 --gapext  or -e [number]                               : gap extension penalty for affine gap model\n";
-
-
 
 int main(int argc, char **argv)
 {
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     case '?':
       if (!isprint(optopt))
         fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
-      return 1;
+      exit(1);
     default:
       abort();
     }
@@ -72,13 +72,6 @@ int main(int argc, char **argv)
   }
   else
   {
-    std::string mode_str = std::string(prg_options.mode);
-    if (mode_str != "global" && mode_str != "aglobal" && mode_str != "local" && mode_str != "alocal")
-    {
-      printf("%s", "--mode or -m options must be one of the following arguments [global | local | aglocal | alocal]\n");
-      exit(1);
-    }
-
     char *s1 = NULL;
     char *s2 = NULL;
     char *title1 = NULL;
@@ -90,7 +83,25 @@ int main(int argc, char **argv)
     printf("title1 = %s\n", title1);
     printf("title2 = %s\n", title2);
 
-    needleman_wunsch_align(s1, s2, prg_options.gapopen);
+    if (strcmp(prg_options.mode, "global") == 0)
+    {
+      needleman_wunsch_align(s1, s2, prg_options.gapopen);
+    }
+    else if (strcmp(prg_options.mode, "aglobal") == 0)
+    {
+      
+    }
+    else if (strcmp(prg_options.mode, "local") == 0)
+    {
+    }
+    else if (strcmp(prg_options.mode, "alocal") == 0)
+    {
+    }
+    else
+    {
+      printf("%s", "--mode or -m options must be one of the following arguments [global | local | aglocal | alocal]\n");
+      exit(1);
+    }
   }
 
   printf("\n\n");

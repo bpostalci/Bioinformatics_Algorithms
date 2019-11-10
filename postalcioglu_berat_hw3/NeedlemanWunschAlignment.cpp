@@ -23,8 +23,8 @@ struct score_item
 
 inline int max(int a, int b, int c)
 {
-    int f = MAX(a, b);
-    return f > c ? f : c;
+    int m = MAX(a, b);
+    return m > c ? m : c;
 }
 
 void display_matrix(score_item **matrix, u32 row, u32 col)
