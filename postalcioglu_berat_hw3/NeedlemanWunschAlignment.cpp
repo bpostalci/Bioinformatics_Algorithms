@@ -117,7 +117,6 @@ void needleman_wunsch_align(char *s1, char *s2, int gap_penalty)
         matrix_s[i][0].score = matrix_s[i - 1][0].score + gap_penalty;
         matrix_s[i][0].pos = '-';
     }
-
     for (i = 1; i < s2_len + 1; i++)
     {
         matrix_s[0][i].score = matrix_s[0][i - 1].score + gap_penalty;
