@@ -1,4 +1,5 @@
-c = g++ -O3 -std=c++0x -Wall 
+# c = g++ -O3 -std=c++0x -Wall 
+c = clang++ -O3 -std=c++0x -Wall 
 
 objects = Driver.o IOHelper.o AlignmentCommon.o LocalAlignmentCommon.o NeedlemanWunschAlignment.o\
 		  NeedlemanWunschAffineAlignment.o SmithWatermanAlignment.o SmithWatermanAffineAlignment.o 

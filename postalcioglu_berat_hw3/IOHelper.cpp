@@ -176,20 +176,20 @@ void write_alignment(char *s1, char *s2, char *title1, char *title2, int score, 
 		{
 			fprintf(fp, "%c", title1[j]);
 		}
-		for (j = 0; j < title1_space; j++)
-		{
-			fprintf(fp, " ");
-		}
-		for (j = i * partition_len; j < current_limit; j++)
+    for (j = 0; j < title1_space; j++)
+    {
+    fprintf(fp, " ");
+    }
+    for (j = i * partition_len; j < current_limit; j++)
 		{
 			fprintf(fp, "%c", s1[j]);
 		}
 		fprintf(fp, "\n");
 
-		for (j = 0; j < title2_len; j++)
-		{
-			fprintf(fp, "%c", title2[j]);
-		}
+    for (j = 0; j < title2_len; j++)
+    {
+      fprintf(fp, "%c", title2[j]);
+    }
 		for (j = 0; j < title2_space; j++)
 		{
 			fprintf(fp, " ");
