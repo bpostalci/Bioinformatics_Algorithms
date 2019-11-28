@@ -39,8 +39,7 @@ int main(int argc, char **argv)
       {"mode", required_argument, NULL, 'm'},
       {"input", required_argument, NULL, 'i'},
       {"gapopen", required_argument, NULL, 'o'},
-      {"gapext", required_argument, NULL, 'e'},
-      {0, 0, 0, 0}};
+      {"gapext", required_argument, NULL, 'e'}};
 
   int c, option_index = 0;
   while ((c = getopt_long(argc, argv, optstring, long_options, &option_index)) != -1)
@@ -60,8 +59,10 @@ int main(int argc, char **argv)
       prg_options.gapext = atoi(optarg);
       break;
     case '?':
-      if (!isprint(optopt))
-        fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
+    
+    printf("%s", help);
+      //if (!isprint(optopt))
+    //  fprintf(stderr, "Unknown option character %x.\n", optopt);
       exit(1);
     default:
       abort();
