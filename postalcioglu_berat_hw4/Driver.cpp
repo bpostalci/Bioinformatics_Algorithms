@@ -8,6 +8,14 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "SequenceToProfile.h"
+#include "IOHelper.h"
+
+#include <vector>
+#include <string>
+#include <iostream>
+
+using namespace std;
 
 struct prg_options
 {
@@ -88,8 +96,22 @@ int main(int argc, char **argv)
             strncpy(prg_options.out, tmp, tmp_len);
             is_default_out = true;
         }
-        printf("out: %s\n", prg_options.out);
 
+        printf("fasta file              => %s\n", prg_options.fasta);
+        printf("profile file            => %s\n", prg_options.aln);
+        printf("output file             => %s\n", prg_options.out);
+        printf("match score             => %d\n", prg_options.match);
+        printf("mismatch penalty score  => %d\n", prg_options.mismatch);
+        printf("gap penalty score       => %d\n", prg_options.gap);
+
+        string seq;
+        string seq_title;
+        fill_sequence_buff(seq, seq_title, prg_options.fasta);
+
+        vector<string> seqs;
+        fill_profile_buff(seqs, prg_options.aln);
+
+        
 
         // free memory
         if (is_default_out)
