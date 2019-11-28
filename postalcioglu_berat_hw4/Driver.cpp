@@ -8,9 +8,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "SequenceToProfile.h"
+#include "SequenceToProfileAlignment.h"
 #include "IOHelper.h"
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -86,17 +85,6 @@ int main(int argc, char **argv)
     }
     else
     {
-        bool is_default_out = false;
-        if (prg_options.out == NULL)
-        {
-            const char *tmp = "sequence.aln";
-            size_t tmp_len = strlen(tmp);
-            size_t tmp_size = sizeof(char) * (tmp_len + 1);
-            prg_options.out = (char *)malloc(tmp_size);
-            strncpy(prg_options.out, tmp, tmp_len);
-            is_default_out = true;
-        }
-
         printf("fasta file              => %s\n", prg_options.fasta);
         printf("profile file            => %s\n", prg_options.aln);
         printf("output file             => %s\n", prg_options.out);
@@ -111,11 +99,8 @@ int main(int argc, char **argv)
         vector<string> seqs;
         fill_profile_buff(seqs, prg_options.aln);
 
-        
-
-        // free memory
-        if (is_default_out)
-            free(prg_options.out);
+        scoring scores = {prg_options.match, prg_options.mismatch, prg_options.gap};
+        align_seq_to_profile(seq, seqs, scores, prg_options.out != NULL ? prg_options.out : "sequence.aln");
     }
 
     return 0;
