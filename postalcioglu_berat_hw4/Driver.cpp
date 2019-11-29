@@ -100,7 +100,7 @@ int main(int argc, char **argv)
         fill_profile_buff(seqs, prg_options.aln);
 
         scoring scores = {prg_options.match, prg_options.mismatch, prg_options.gap};
-        align_seq_to_profile(seq, seqs, scores, prg_options.out != NULL ? prg_options.out : "sequence.aln");
+        align_seq_to_profile(seq, seqs, scores, seq_title, prg_options.out != NULL ? prg_options.out : "sequence.aln");
     }
 
     return 0;
