@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        string outfile(prg_options.out != NULL ? prg_options.out : "sequence.aln");
+        string outfile(prg_options.out != NULL ? prg_options.out : "new_profile.aln");
 
         printf("fasta file              => %s\n", prg_options.fasta);
         printf("profile file            => %s\n", prg_options.aln);
