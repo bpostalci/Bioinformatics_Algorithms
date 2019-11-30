@@ -23,7 +23,7 @@ void fill_sequence_buff(string &seq, string &title, const string &filename)
 
 	if (!file.is_open())
 	{
-		cout << "file cannot be opened...\n";
+		cout << filename << " file cannot be opened...\n";
 		exit(1);
 	}
 
@@ -50,7 +50,7 @@ void fill_profile_buff(vector<string> &seqs, const string &filename)
 
 	if (!file.is_open())
 	{
-		cout << "file cannot be opened...\n";
+		cout << filename << " file cannot be opened...\n";
 		exit(1);
 	}
 
