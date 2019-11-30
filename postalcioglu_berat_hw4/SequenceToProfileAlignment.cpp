@@ -1,6 +1,12 @@
+/**
+ * @description   Sequence to profile alignment
+ * @author        Berat Postalcioglu - 21401769 
+ **/
+
 #include "SequenceToProfileAlignment.h"
 #include "Typedefs.h"
 #include "AlphabetHelper.h"
+#include "IOHelper.h"
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -46,92 +52,119 @@ double score(char x, u32 col_index, const vector<string> &profile, const scoring
     {
         char cur_ch = GET_CHAR(y);
         double p = probability(cur_ch, profile[col_index]);
-        if (x == cur_ch)
+        if (x == '-' || cur_ch == '-')
+        {
+            score += p * scores.gap;
+        }
+        else if (x == cur_ch)
         {
             score += p * scores.match;
         }
-        else if (x != cur_ch)
-        {
-            score += p * scores.mistmatch;
-        }
         else
         {
-            score += p * scores.gap;
+            score += p * scores.mistmatch;
         }
     }
 
     return score;
 }
-// char getMaxOccuringChar(const string &str)
+// char get_max_occuring_ch(const string &str)
 // {
-//     int count[4] = {0};
+//     int count[alphabet_len] = {0};
 //     int max = 0;
-//     char result;
+//     char result = '-';
 
 //     REP(i, 0, str.length())
 //     {
-//         count[GET_DIGIT(str[i]) - 1]++;
+//         ++count[GET_DIGIT(str[i]) - 1];
 //         if (max < count[GET_DIGIT(str[i]) - 1])
 //         {
-//             max = count[str[i]];
+//             max = count[GET_DIGIT(str[i]) - 1];
 //             result = str[i];
 //         }
 //     }
-
 //     return result;
 // }
 
-// void output_result(vector<string> &transponse_profile, score_item **matrix_v, string &seq, u32 row, u32 col, const string &title, const string &out_path)
-// {
-//     string str;
-//     str.reserve(col); // eliminate heap allocation overhead
-//     stringstream res_stream(str);
-//     u32 i = row;
-//     u32 j = col;
+string trim(const string &str)
+{
+    stringstream ss;
+    for (auto ch : str)
+    {
+        if (ch != ' ')
+        {
+            ss << ch;
+        }
+    }
 
-//     while (i > 0 || j > 0)
-//     {
-//         if (matrix_v[i][j].pos == '-') // we reached the edge
-//         {
-//             while (j > 0)
-//             {
-//                 cout << transponse_profile[j] << "\n";
-//                 char ch = getMaxOccuringChar(transponse_profile[j]);
-//                 cout << ch << "\n";
-//                 res_stream << ch;
-//                 --j;
-//             }
-//             while (i > 0)
-//             {
-//                 res_stream << seq[i--];
-//             }
-//             break;
-//         }
+    return ss.str();
+}
 
-//         switch (matrix_v[i][j].pos)
-//         {
-//         case 'd':
-//             res_stream << seq[i - 1];
-//             --i;
-//             --j;
-//             break;
-//         case 'u':
-//             res_stream << seq[--i];
-//             break;
-//         case 'l':
-//             cout << transponse_profile[j] << "\n";
-//             char ch = getMaxOccuringChar(transponse_profile[j]);
-//             cout << ch << "\n";
-//             res_stream << ch;
-//             --j;
-//             break;
-//         }
-//     }
+void output_result(vector<string> &transponse_profile,
+                   score_item **matrix_v,
+                   string &seq,
+                   u32 row,
+                   u32 col,
+                   const string &title,
+                   const string &out_path,
+                   const string &profile_file)
+{
+    string str;
+    str.reserve(col); // eliminate heap allocation overhead
+    stringstream res_stream(str);
+    u32 i = row;
+    u32 j = col;
 
-//     cout << res_stream.str() << "\n";
-// }
+    while (i > 0 || j > 0)
+    {
+        if (matrix_v[i][j].pos == '-') // we reached the edge
+        {
+            while (j > 0)
+            {
+                res_stream << '-';
+                --j;
+            }
+            while (i > 0)
+            {
+                res_stream << seq[i--];
+            }
+            break;
+        }
 
-void align_seq_to_profile(string &seq, vector<string> &profile, const scoring &scores, const string &title, const string &out_path)
+        switch (matrix_v[i][j].pos)
+        {
+        case 'd':
+            res_stream << seq[--i];
+            --j;
+            break;
+        case 'u':
+            res_stream << seq[--i];
+            break;
+        case 'l':
+            res_stream << '-';
+            --j;
+            break;
+        }
+    }
+
+    string title_cp(title);
+    reverse(title_cp.begin(), title_cp.end());
+    string trimmed_title = trim(title_cp);
+    u32 num_of_gaps = res_stream.str().size() > col ? res_stream.str().size() - col : 0;
+    res_stream << " " << trimmed_title.substr(0, trimmed_title.size() - 1);
+
+    string res(res_stream.str());
+    reverse(res.begin(), res.end());
+
+    write_alignment(res, out_path, profile_file, num_of_gaps);
+}
+
+void align_seq_to_profile(string &seq,
+                          vector<string> &profile,
+                          const scoring &scores,
+                          const string &title,
+                          const string &out_path,
+                          const string &profile_file)
 {
     u32 seq_len = seq.length();
     u32 profile_seq_len = profile[0].length();
@@ -181,16 +214,17 @@ void align_seq_to_profile(string &seq, vector<string> &profile, const scoring &s
         }
     }
 
-    REP(i, 0, seq_len + 1)
-    {
-        REP(j, 0, profile_seq_len + 1)
-        {
-            cout << matrix_v[i][j].score << " " << (matrix_v[i][j].pos == 'd' ? '<' : matrix_v[i][j].pos) << "\t";
-        }
-        cout << "\n";
-    }
+    // display matrix_v
+    // REP(i, 0, seq_len + 1)
+    // {
+    //     REP(j, 0, profile_seq_len + 1)
+    //     {
+    //         cout << matrix_v[i][j].score << " " << matrix_v[i][j].pos << "\t";
+    //     }
+    //     cout << "\n";
+    // }
 
-    // output_result(transponse_profile, matrix_v, seq, seq_len, profile_seq_len, title, out_path);
+    output_result(transponse_profile, matrix_v, seq, seq_len, profile_seq_len, title, out_path, profile_file);
 
     // free memory
     REP(i, 0, seq_len + 1)

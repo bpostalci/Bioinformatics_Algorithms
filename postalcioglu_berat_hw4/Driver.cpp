@@ -85,9 +85,11 @@ int main(int argc, char **argv)
     }
     else
     {
+        string outfile(prg_options.out != NULL ? prg_options.out : "sequence.aln");
+
         printf("fasta file              => %s\n", prg_options.fasta);
         printf("profile file            => %s\n", prg_options.aln);
-        printf("output file             => %s\n", prg_options.out);
+        printf("output file             => %s\n", outfile.c_str());
         printf("match score             => %d\n", prg_options.match);
         printf("mismatch penalty score  => %d\n", prg_options.mismatch);
         printf("gap penalty score       => %d\n", prg_options.gap);
@@ -100,7 +102,7 @@ int main(int argc, char **argv)
         fill_profile_buff(seqs, prg_options.aln);
 
         scoring scores = {prg_options.match, prg_options.mismatch, prg_options.gap};
-        align_seq_to_profile(seq, seqs, scores, seq_title, prg_options.out != NULL ? prg_options.out : "sequence.aln");
+        align_seq_to_profile(seq, seqs, scores, seq_title, outfile, prg_options.aln);
     }
 
     return 0;

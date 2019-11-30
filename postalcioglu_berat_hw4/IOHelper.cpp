@@ -64,3 +64,41 @@ void fill_profile_buff(vector<string> &seqs, const string &filename)
 
 	file.close();
 }
+
+void write_alignment(const string &aln, const string &output_file, const string &profile_file, u32 num_of_gaps)
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	ofstream out;
+	out.open(output_file);
+	if (!out.is_open())
+	{
+		cout << output_file << " file cannot be opened...\n";
+		exit(1);
+	}
+
+	ifstream alnfile;
+	alnfile.open(profile_file);
+	if (!alnfile.is_open())
+	{
+		cout << profile_file << " file cannot be opened...\n";
+		exit(1);
+	}
+
+	stringstream gapss;
+	for(u32 i = 0; i < num_of_gaps; i++)
+	{
+		gapss << '-';
+	}
+
+	string line;
+	while (getline(alnfile, line))
+	{
+		out << line << gapss.str() << "\n";
+	}
+	out << aln;
+
+	alnfile.close();
+	out.close();
+}
