@@ -99,10 +99,11 @@ int main(int argc, char **argv)
         fill_sequence_buff(seq, seq_title, prg_options.fasta);
 
         vector<string> seqs;
-        fill_profile_buff(seqs, prg_options.aln);
+        vector<string> seqs_titles;
+        fill_profile_buff(seqs, seqs_titles, prg_options.aln);
 
         scoring scores = {prg_options.match, prg_options.mismatch, prg_options.gap};
-        align_seq_to_profile(seq, seqs, scores, seq_title, outfile, prg_options.aln);
+        align_seq_to_profile(seq, seqs, seqs_titles, scores, seq_title, outfile);
     }
 
     return 0;

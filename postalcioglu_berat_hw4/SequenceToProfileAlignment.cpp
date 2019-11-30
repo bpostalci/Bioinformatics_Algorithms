@@ -100,18 +100,26 @@ string trim(const string &str)
     return ss.str();
 }
 
-void output_result(vector<string> &transponse_profile,
+void output_result(const vector<string> &profile,
+                   const vector<string> &profile_titles,
                    score_item **matrix_v,
                    string &seq,
                    u32 row,
                    u32 col,
                    const string &title,
-                   const string &out_path,
-                   const string &profile_file)
+                   const string &out_path)
 {
     string str;
     str.reserve(col); // eliminate heap allocation overhead
-    stringstream res_stream(str);
+    stringstream seq_stream(str);
+    vector<stringstream> seqs_vector;
+
+    // init seqs vector
+    REP(i, 0, profile.size())
+    {
+        seqs_vector.push_back(stringstream(str));
+    }
+
     u32 i = row;
     u32 j = col;
 
@@ -121,12 +129,20 @@ void output_result(vector<string> &transponse_profile,
         {
             while (j > 0)
             {
-                res_stream << '-';
+                seq_stream << '-';
+                REP(i, 0, seqs_vector.size())
+                {
+                    seqs_vector[i] << profile[i][j];
+                }
                 --j;
             }
             while (i > 0)
             {
-                res_stream << seq[i--];
+                seq_stream << seq[i--];
+                REP(i, 0, seqs_vector.size())
+                {
+                    seqs_vector[i] << '-';
+                }
             }
             break;
         }
@@ -134,14 +150,26 @@ void output_result(vector<string> &transponse_profile,
         switch (matrix_v[i][j].pos)
         {
         case 'd':
-            res_stream << seq[--i];
+            seq_stream << seq[--i];
+            REP(i, 0, seqs_vector.size())
+            {
+                seqs_vector[i] << profile[i][j - 1];
+            }
             --j;
             break;
         case 'u':
-            res_stream << seq[--i];
+            seq_stream << seq[--i];
+            REP(i, 0, seqs_vector.size())
+            {
+                seqs_vector[i] << '-';
+            }
             break;
         case 'l':
-            res_stream << '-';
+            seq_stream << '-';
+            REP(i, 0, seqs_vector.size())
+            {
+                seqs_vector[i] << profile[i][j - 1];
+            }
             --j;
             break;
         }
@@ -150,21 +178,36 @@ void output_result(vector<string> &transponse_profile,
     string title_cp(title);
     reverse(title_cp.begin(), title_cp.end());
     string trimmed_title = trim(title_cp);
-    u32 num_of_gaps = res_stream.str().size() > col ? res_stream.str().size() - col : 0;
-    res_stream << " " << trimmed_title.substr(0, trimmed_title.size() - 1);
+    seq_stream << " " << trimmed_title.substr(0, trimmed_title.size() - 1);
 
-    string res(res_stream.str());
-    reverse(res.begin(), res.end());
+    string new_aln(seq_stream.str());
+    reverse(new_aln.begin(), new_aln.end());
 
-    write_alignment(res, out_path, profile_file, num_of_gaps);
+    REP(i, 0, profile.size())
+    {
+        string title_cp(profile_titles[i]);
+        reverse(title_cp.begin(), title_cp.end());
+        seqs_vector[i] << " " << title_cp;
+    }
+
+    stringstream new_profiless;
+    REP(i, 0, seqs_vector.size())
+    {
+        string seq(seqs_vector[i].str());
+        reverse(seq.begin(), seq.end());
+        new_profiless << seq << "\n";
+    }
+    new_profiless << new_aln;
+
+    write_alignment(new_profiless.str(), out_path);
 }
 
 void align_seq_to_profile(string &seq,
                           vector<string> &profile,
+                          vector<string> &profile_titles,
                           const scoring &scores,
                           const string &title,
-                          const string &out_path,
-                          const string &profile_file)
+                          const string &out_path)
 {
     u32 seq_len = seq.length();
     u32 profile_seq_len = profile[0].length();
@@ -192,7 +235,7 @@ void align_seq_to_profile(string &seq,
     }
 
     // get transpose of profile to not calculate column over and over again
-    vector<string> transponse_profile;
+    vector<string> transpose_profile;
     REP(j, 0, profile[0].length())
     {
         stringstream ss;
@@ -200,15 +243,15 @@ void align_seq_to_profile(string &seq,
         {
             ss << profile[i][j];
         }
-        transponse_profile.push_back(ss.str());
+        transpose_profile.push_back(ss.str());
     }
     REP(i, 1, seq_len + 1)
     {
         REP(j, 1, profile_seq_len + 1)
         {
-            double match_mismatch = matrix_v[i - 1][j - 1].score + score(seq[i - 1], j - 1, transponse_profile, scores);
+            double match_mismatch = matrix_v[i - 1][j - 1].score + score(seq[i - 1], j - 1, transpose_profile, scores);
             double insertion = matrix_v[i - 1][j].score + scores.gap;
-            double deletion = matrix_v[i][j - 1].score + score('-', j - 1, transponse_profile, scores);
+            double deletion = matrix_v[i][j - 1].score + score('-', j - 1, transpose_profile, scores);
             matrix_v[i][j].score = max({match_mismatch, insertion, deletion});
             matrix_v[i][j].pos = GET_POS(matrix_v[i][j].score, match_mismatch, insertion, deletion);
         }
@@ -224,7 +267,7 @@ void align_seq_to_profile(string &seq,
     //     cout << "\n";
     // }
 
-    output_result(transponse_profile, matrix_v, seq, seq_len, profile_seq_len, title, out_path, profile_file);
+    output_result(profile, profile_titles, matrix_v, seq, seq_len, profile_seq_len, title, out_path);
 
     // free memory
     REP(i, 0, seq_len + 1)

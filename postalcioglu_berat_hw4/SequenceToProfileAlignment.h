@@ -10,4 +10,9 @@ struct scoring
     int match, mistmatch, gap;
 };
 
-void align_seq_to_profile(string &seq, vector<string> &profile, const scoring &scores, const string &title, const string &out_path, const string &profile_file);
+void align_seq_to_profile(string &seq,
+                          vector<string> &profile,
+                          vector<string> &profile_titles,
+                          const scoring &scores,
+                          const string &title,
+                          const string &out_path);
