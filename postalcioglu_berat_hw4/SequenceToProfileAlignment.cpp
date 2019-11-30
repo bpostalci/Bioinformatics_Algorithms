@@ -119,6 +119,7 @@ void output_result(const vector<string> &profile,
     {
         seqs_vector.push_back(stringstream(str));
     }
+    u32 seqs_vector_size = seqs_vector.size();
 
     u32 i = row;
     u32 j = col;
@@ -130,7 +131,7 @@ void output_result(const vector<string> &profile,
             while (j > 0)
             {
                 seq_stream << '-';
-                REP(i, 0, seqs_vector.size())
+                REP(i, 0, seqs_vector_size)
                 {
                     seqs_vector[i] << profile[i][j];
                 }
@@ -139,7 +140,7 @@ void output_result(const vector<string> &profile,
             while (i > 0)
             {
                 seq_stream << seq[i--];
-                REP(i, 0, seqs_vector.size())
+                REP(i, 0, seqs_vector_size)
                 {
                     seqs_vector[i] << '-';
                 }
@@ -151,7 +152,7 @@ void output_result(const vector<string> &profile,
         {
         case 'd':
             seq_stream << seq[--i];
-            REP(i, 0, seqs_vector.size())
+            REP(i, 0, seqs_vector_size)
             {
                 seqs_vector[i] << profile[i][j - 1];
             }
@@ -159,14 +160,14 @@ void output_result(const vector<string> &profile,
             break;
         case 'u':
             seq_stream << seq[--i];
-            REP(i, 0, seqs_vector.size())
+            REP(i, 0, seqs_vector_size)
             {
                 seqs_vector[i] << '-';
             }
             break;
         case 'l':
             seq_stream << '-';
-            REP(i, 0, seqs_vector.size())
+            REP(i, 0, seqs_vector_size)
             {
                 seqs_vector[i] << profile[i][j - 1];
             }
@@ -191,7 +192,7 @@ void output_result(const vector<string> &profile,
     }
 
     stringstream new_profiless;
-    REP(i, 0, seqs_vector.size())
+    REP(i, 0, seqs_vector_size)
     {
         string seq(seqs_vector[i].str());
         reverse(seq.begin(), seq.end());
