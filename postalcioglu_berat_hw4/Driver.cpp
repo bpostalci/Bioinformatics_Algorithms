@@ -3,13 +3,10 @@
  * @author        Berat Postalcioglu - 21401769 
  **/
 
-#include <stdio.h>
-#include <getopt.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include "SequenceToProfileAlignment.h"
 #include "IOHelper.h"
+#include <stdio.h>
+#include <getopt.h>
 #include <vector>
 #include <string>
 #include <iostream>
