@@ -12,25 +12,18 @@
 #include <algorithm>
 
 #define REP(i, a, b) for (u32 i = a; i < b; i++)
-
-bool double_equals(double a, double b, double epsilon = 0.0001)
-{
-    return abs(a - b) < epsilon;
-}
-
 #define GET_POS(score, match_mismatch, insertion, deletion) (double_equals(score, match_mismatch) ? 'd' : double_equals(score, insertion) ? 'u' : double_equals(score, deletion) ? 'l' : '\0')
-
-int max(double a, double b, double c)
-{
-    double m = (a > b ? a : b);
-    return m > c ? m : c;
-}
 
 struct score_item
 {
     double score;
     char pos;
 };
+
+inline bool double_equals(double a, double b, double epsilon = 0.0001)
+{
+    return abs(a - b) < epsilon;
+}
 
 double probability(char x, string col)
 {
@@ -42,6 +35,20 @@ double probability(char x, string col)
     }
 
     return ((double)found / col.length());
+}
+
+string trim(const string &str)
+{
+    stringstream ss;
+    for (auto ch : str)
+    {
+        if (ch != ' ')
+        {
+            ss << ch;
+        }
+    }
+
+    return ss.str();
 }
 
 double score(char x, u32 col_index, const vector<string> &profile, const scoring &scores)
@@ -67,37 +74,6 @@ double score(char x, u32 col_index, const vector<string> &profile, const scoring
     }
 
     return score;
-}
-// char get_max_occuring_ch(const string &str)
-// {
-//     int count[alphabet_len] = {0};
-//     int max = 0;
-//     char result = '-';
-
-//     REP(i, 0, str.length())
-//     {
-//         ++count[GET_DIGIT(str[i]) - 1];
-//         if (max < count[GET_DIGIT(str[i]) - 1])
-//         {
-//             max = count[GET_DIGIT(str[i]) - 1];
-//             result = str[i];
-//         }
-//     }
-//     return result;
-// }
-
-string trim(const string &str)
-{
-    stringstream ss;
-    for (auto ch : str)
-    {
-        if (ch != ' ')
-        {
-            ss << ch;
-        }
-    }
-
-    return ss.str();
 }
 
 void output_result(const vector<string> &profile,
