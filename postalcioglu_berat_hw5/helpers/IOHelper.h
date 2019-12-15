@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "Typedefs.h"
-#include "Seq.h"
+#include "../data_structures/Typedefs.h"
+#include "../data_structures/Seq.h"
 #include <string>
 #include <vector>
 

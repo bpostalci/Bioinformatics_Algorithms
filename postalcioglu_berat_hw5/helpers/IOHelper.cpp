@@ -1,11 +1,4 @@
-/**
- * @description   I/O helper
- * @author        Berat Postalcioglu - 21401769 
- **/
-
 #include "IOHelper.h"
-#include "Typedefs.h"
-#include "Seq.h"
 #include <sstream>
 #include <vector>
 #include <iostream>

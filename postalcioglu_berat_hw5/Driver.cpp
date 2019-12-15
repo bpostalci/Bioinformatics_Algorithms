@@ -3,9 +3,9 @@
  * @author        Berat Postalcioglu - 21401769 
  **/
 
-#include "Typedefs.h"
-#include "IOHelper.h"
-#include "Seq.h"
+#include "data_structures/Typedefs.h"
+#include "data_structures/Seq.h"
+#include "helpers/IOHelper.h"
 #include <iostream>
 #include <vector>
 #include <getopt.h>
@@ -91,15 +91,15 @@ int main(int argc, char **argv)
     printf("match score                  => %d\n", prg_options.match);
     printf("mismatch penalty score       => %d\n", prg_options.mismatch);
 
-    // vector<seq> seqs;
-    // fill_sequences_buff(seqs, "sequences.fasta");
+    vector<seq> seqs;
+    fill_sequences_buff(seqs, prg_options.fasta);
 
-    // for(auto it : seqs)
-    // {
-    //   cout << it.seq << "\n";
-    //   cout << it.title << "\n";
-    //   cout << it.score << "\n";
-    // }
+    for(auto it : seqs)
+    {
+      cout << it.seq << "\n";
+      cout << it.title << "\n";
+      cout << it.score << "\n";
+    }
   }
 
   return 0;
