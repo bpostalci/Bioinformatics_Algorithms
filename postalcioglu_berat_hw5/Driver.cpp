@@ -4,6 +4,7 @@
  **/
 
 #include "algos/NeedlemanWunschAffineAlignment.h"
+#include "algos/UPGMA.h"
 #include "data_structures/Typedefs.h"
 #include "data_structures/Seq.h"
 #include "helpers/IOHelper.h"
@@ -118,10 +119,7 @@ int main(int argc, char **argv)
       cout << "\n";
     }
 
-    // for (auto it : seqs)
-    // {
-    //   cout << it.seq << "\n";
-    // }
+
 
     // free memory
     REP(i, 0, seqs_size)
