@@ -1,3 +1,4 @@
 buildUPGMA
 .vscode/
 objects/
+*.o
