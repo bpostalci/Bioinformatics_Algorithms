@@ -19,12 +19,6 @@ objects/NeedlemanWunschAffineAlignment.o: algos/NeedlemanWunschAffineAlignment.c
 objects/UPGMA.o: algos/UPGMA.cpp
 	$(c) -c algos/UPGMA.cpp -o objects/UPGMA.o
 
-# AlignmentCommon.o: AlignmentCommon.cpp
-# 	$(c) -c AlignmentCommon.cpp -o AlignmentCommon.o
-
-# LocalAlignmentCommon.o: LocalAlignmentCommon.cpp
-# 	$(c) -c LocalAlignmentCommon.cpp -o LocalAlignmentCommon.o
-
 .PHONY: clean
 clean:
 	rm $(objects) $(exe)
