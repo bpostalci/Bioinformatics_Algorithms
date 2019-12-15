@@ -1,8 +1,13 @@
 #include "UPGMA.h"
+#include <iostream>
 
-using namespace std;
 
-void buildUPGMA(double **dm, const std::string &outfile)
+void buildUPGMA(double **dm, const vector<seq>& seqs, const string &outfile)
 {
-        
+    for (auto it : seqs) 
+    {
+        cout << "title: " << it.title << "\n";
+    }
+
+    
 }

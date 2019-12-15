@@ -119,7 +119,7 @@ int main(int argc, char **argv)
       cout << "\n";
     }
 
-
+    buildUPGMA(dm, seqs, outfile);
 
     // free memory
     REP(i, 0, seqs_size)

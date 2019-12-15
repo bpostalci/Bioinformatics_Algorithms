@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../data_structures/Seq.h"
 #include <string>
+#include <vector>
 
-void buildUPGMA(double **dm, const std::string &outfile);
+using namespace std;
+
+void buildUPGMA(double **dm, const vector<seq>& seqs, const string &outfile);

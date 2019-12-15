@@ -1,6 +1,6 @@
 c = g++ -O3 -std=c++0x -Wall 
 
-objects = objects/Driver.o objects/IOHelper.o objects/NeedlemanWunschAffineAlignment.o
+objects = objects/Driver.o objects/IOHelper.o objects/NeedlemanWunschAffineAlignment.o objects/UPGMA.o
 exe = buildUPGMA
 common_headers = helpers/IOHelper.h data_structures/Typedefs.h data_structures/Seq.h
 
@@ -15,6 +15,9 @@ objects/IOHelper.o: helpers/IOHelper.cpp $(common_headers)
 
 objects/NeedlemanWunschAffineAlignment.o: algos/NeedlemanWunschAffineAlignment.cpp
 	$(c) -c algos/NeedlemanWunschAffineAlignment.cpp -o objects/NeedlemanWunschAffineAlignment.o
+
+objects/UPGMA.o: algos/UPGMA.cpp
+	$(c) -c algos/UPGMA.cpp -o objects/UPGMA.o
 
 # AlignmentCommon.o: AlignmentCommon.cpp
 # 	$(c) -c AlignmentCommon.cpp -o AlignmentCommon.o
