@@ -3,6 +3,7 @@
  * @author        Berat Postalcioglu - 21401769 
  **/
 
+#include "algos/NeedlemanWunschAffineAlignment.h"
 #include "data_structures/Typedefs.h"
 #include "data_structures/Seq.h"
 #include "helpers/IOHelper.h"
@@ -11,6 +12,8 @@
 #include <getopt.h>
 
 using namespace std;
+
+#define REP(i, a, b) for (u32 i = a; i < b; i++)
 
 struct prg_options
 {
@@ -32,6 +35,7 @@ Options and arguments:\n\
 --gapext   or -e  [number]            : gap extension penalty score\n\
 --mismatch or -i  [number]            : mismatch penalty score\n";
 
+void construct_distance_matrix(const vector<seq> &seqs, double **dm, const prg_options& prg_options);
 int main(int argc, char **argv)
 {
 
@@ -93,14 +97,54 @@ int main(int argc, char **argv)
 
     vector<seq> seqs;
     fill_sequences_buff(seqs, prg_options.fasta);
+    u32 seqs_size = seqs.size();
 
-    for(auto it : seqs)
+    // allocate distance matrix
+    double **dm = new double *[seqs_size]; // distance matrix
+    REP(i, 0, seqs_size)
     {
-      cout << it.seq << "\n";
-      cout << it.title << "\n";
-      cout << it.score << "\n";
+      dm[i] = new double[seqs_size]{0};
     }
+    construct_distance_matrix(seqs, dm, prg_options);
+
+    // display distance matrix
+    cout << "--- distance matrix ---" << "\n";
+    for (u32 i = 0; i < seqs_size; i++)
+    {
+      for (u32 j = 0; j < seqs_size; j++)
+      {
+        cout << dm[i][j] << " ";
+      }
+      cout << "\n";
+    }
+
+    // for (auto it : seqs)
+    // {
+    //   cout << it.seq << "\n";
+    // }
+
+    // free memory
+    REP(i, 0, seqs_size)
+    {
+      delete[] dm[i];
+    }
+    delete[] dm;
   }
 
   return 0;
+}
+
+void construct_distance_matrix(const vector<seq> &seqs, double **dm, const prg_options& prg_options)
+{
+  u32 seqs_size = seqs.size();
+
+  // construct distance matrix
+  for (u32 i = 0; i < seqs_size - 1; i++)
+  {
+    for (u32 j = i + 1; j < seqs_size; j++)
+    {
+      dm[i][j] = needleman_wunsch_affine_align(seqs[i].seq.c_str(), seqs[j].seq.c_str(), prg_options.match, prg_options.mismatch, prg_options.gapopen, prg_options.gapext);
+      dm[j][i] = dm[i][j];
+    }
+  }
 }
