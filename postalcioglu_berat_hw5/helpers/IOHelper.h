@@ -1,8 +1,3 @@
-/**
- * @description   I/O Helper
- * @author        Berat Postalcioglu - 21401769 
- **/
-
 #pragma once
 
 #include "../data_structures/Typedefs.h"

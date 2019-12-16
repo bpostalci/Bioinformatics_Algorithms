@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../data_structures/Seq.h"
+#include "../data_structures/Typedefs.h"
 #include <string>
+#include <sstream>
 #include <vector>
 
 using namespace std;
 
-void buildUPGMA(double **dm, const vector<seq>& seqs, const string &outfile);
+void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, stringstream &result);

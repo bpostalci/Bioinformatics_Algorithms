@@ -1,8 +1,3 @@
-/**
- * @description   I/O helper
- * @author        Berat Postalcioglu - 21401769 
- **/
-
 #include "algos/NeedlemanWunschAffineAlignment.h"
 #include "algos/UPGMA.h"
 #include "data_structures/Typedefs.h"
@@ -10,6 +5,7 @@
 #include "helpers/IOHelper.h"
 #include <iostream>
 #include <vector>
+#include <sstream>
 #include <getopt.h>
 
 using namespace std;
@@ -36,7 +32,7 @@ Options and arguments:\n\
 --gapext   or -e  [number]            : gap extension penalty score\n\
 --mismatch or -i  [number]            : mismatch penalty score\n";
 
-void construct_distance_matrix(const vector<seq> &seqs, double **dm, const prg_options& prg_options);
+void construct_distance_matrix(const vector<seq> &seqs, double **dm, const prg_options &prg_options);
 int main(int argc, char **argv)
 {
 
@@ -109,7 +105,8 @@ int main(int argc, char **argv)
     construct_distance_matrix(seqs, dm, prg_options);
 
     // display distance matrix
-    cout << "--- distance matrix ---" << "\n";
+    cout << "--- distance matrix ---"
+         << "\n";
     for (u32 i = 0; i < seqs_size; i++)
     {
       for (u32 j = 0; j < seqs_size; j++)
@@ -119,7 +116,8 @@ int main(int argc, char **argv)
       cout << "\n";
     }
 
-    buildUPGMA(dm, seqs, outfile);
+    stringstream upgma;
+    buildUPGMA(dm, seqs_size, seqs, upgma);
 
     // free memory
     REP(i, 0, seqs_size)
@@ -132,7 +130,7 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void construct_distance_matrix(const vector<seq> &seqs, double **dm, const prg_options& prg_options)
+void construct_distance_matrix(const vector<seq> &seqs, double **dm, const prg_options &prg_options)
 {
   u32 seqs_size = seqs.size();
 
