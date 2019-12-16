@@ -249,7 +249,7 @@ void align_seq_to_profile(string &seq,
     // free memory
     REP(i, 0, seq_len + 1)
     {
-        delete matrix_v[i];
+        delete[] matrix_v[i];
     }
 
     delete[] matrix_v;

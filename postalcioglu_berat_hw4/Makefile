@@ -1,4 +1,4 @@
-c = g++ -O3 -std=c++0x -Wall 
+c = g++ -O3  -std=c++0x -Wall 
 
 objects = Driver.o IOHelper.o SequenceToProfileAlignment.o
 exe = alignSeqToProfile
