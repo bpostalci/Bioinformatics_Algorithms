@@ -84,11 +84,13 @@ bool clusters::remove(cluster *cluster_to_remove)
         }
         first_col = this->f->col->nc;
 
-        for (first_neighbors = this->f; first_neighbors != NULL; first_neighbors = first_neighbors->n)
+        first_neighbors = this->f;
+        while (first_neighbors != NULL)
         {
             first_neighbors->col = first_neighbors->col->nc;
             first_neighbors->row = first_col;
             first_col = first_col->nc;
+            first_neighbors = first_neighbors->n;
         }
         tmp_first = NULL;
 
@@ -98,40 +100,46 @@ bool clusters::remove(cluster *cluster_to_remove)
     {
         this->l = this->l->p;
         this->l->n = NULL;
-        cluster_distance *tempDistanceRow;
-        cluster_distance *tempDistanceCol;
+        cluster_distance *row_dist;
+        cluster_distance *col_dist;
 
-        for (tempDistanceRow = this->l->row, tempDistanceCol = this->l->col; tempDistanceRow != tempDistanceCol; tempDistanceRow = tempDistanceRow->nr, tempDistanceCol = tempDistanceCol->nc)
+        row_dist = this->l->row;
+        col_dist = this->l->col;
+        while (row_dist != col_dist)
         {
-            tempDistanceCol->nr = NULL;
-            tempDistanceRow->nc = NULL;
+            row_dist->nc = col_dist->nr = NULL;
+            row_dist = row_dist->nr;
+            col_dist = col_dist->nc;
         }
-        tempDistanceCol->nc = tempDistanceCol->nr = NULL;
+        col_dist->nc = col_dist->nr = NULL;
 
         return true;
     }
     else
     {
-        cluster *prevNode = cluster_to_remove->p;
-        cluster *nextNode = cluster_to_remove->n;
+        cluster *prev_cluster = cluster_to_remove->p;
+        cluster *next_cluster = cluster_to_remove->n;
 
         cluster_to_remove->p->n = cluster_to_remove->n;
         cluster_to_remove->n->p = cluster_to_remove->p;
 
-        cluster_distance *tempColPrev = prevNode->col;
-        cluster_distance *tempColNext = nextNode->col;
+        cluster_distance *row_prev = prev_cluster->row;
+        cluster_distance *row_next = next_cluster->row;
+        cluster_distance *col_prev = prev_cluster->col;
+        cluster_distance *col_next = next_cluster->col;
 
-        cluster_distance *tempRowPrev = prevNode->row;
-        cluster_distance *tempRowNext = nextNode->row;
-
-        for (; tempColPrev != NULL; tempColPrev = tempColPrev->nc, tempColNext = tempColNext->nc)
+        while (col_prev != NULL)
         {
-            tempColPrev->nr = tempColNext;
+            col_prev->nr = col_next;
+            col_prev = col_prev->nc;
+            col_next = col_next->nc;
         }
 
-        for (; tempRowPrev != NULL; tempRowPrev = tempRowPrev->nr, tempRowNext = tempRowNext->nr)
+        while(row_prev != NULL)
         {
-            tempRowPrev->nc = tempRowNext;
+            row_next->nc = row_next;
+            row_prev = row_next->nr;
+            row_next = row_next->nr;
         }
 
         return true;
