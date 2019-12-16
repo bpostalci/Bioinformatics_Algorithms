@@ -15,16 +15,16 @@ void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, stringstream &re
         label.replace(0, 1, "");
         c->insert(label);
     }
-    cluster *new_node = c->first();
+    cluster *new_cluster = c->first();
     REP(i, 0, size)
     {
-        cluster_distance *new_dist = new_node->row;
+        cluster_distance *new_dist = new_cluster->row;
         REP(j, 0, size)
         {
             new_dist->dist = dm[i][j];
             new_dist = new_dist->nr;
         }
-        new_node = new_node->n;
+        new_cluster = new_cluster->n;
     }
 
     u32 j = 1;
