@@ -70,7 +70,6 @@ void clusters::insert(const std::string &label)
 }
 void clusters::remove(cluster *node_to_remove)
 {
-    // If there is only one ClusterNode left in the list, delete the only node and set pointers to NULL for addCluster to function correctly
     if (node_to_remove == this->f && node_to_remove == this->l)
     {
         cluster *tempNode = this->f;
@@ -85,10 +84,6 @@ void clusters::remove(cluster *node_to_remove)
     }
     if (node_to_remove == this->f)
     {
-        // Steps:
-        // reassign head to head->next
-        // go down ->nextInColumn until NULL, then go down ->nextInRow until NULL and remove pointers
-
         cluster *tempHead = this->f;
         cluster *tempHeadRow;
         cluster_distance *tempVerticalDistance;
@@ -116,10 +111,6 @@ void clusters::remove(cluster *node_to_remove)
     }
     else if (node_to_remove == this->l)
     {
-        // Steps:
-        // go down ->column->nextInColumn until NULL and remove pointers; also set pointers pointing to tail list to NULL
-        // go down ->row->nextInRow until NULL and remove pointers; also set pointers pointing to tail list NULL;
-
         this->l = this->l->p;
         this->l->n = NULL;
         cluster_distance *tempDistanceRow;
@@ -134,10 +125,6 @@ void clusters::remove(cluster *node_to_remove)
     }
     else
     {
-        // Steps:
-        // reattach pointers to cluster node
-        // Go down nextInRow and nextInColumn until pointers are equal and remove + reattach pointers
-        // go to ->prev and ->next cluster node and traverse down list
         cluster *prevNode = node_to_remove->p;
         cluster *nextNode = node_to_remove->n;
 
@@ -164,7 +151,6 @@ void clusters::remove(cluster *node_to_remove)
 
 void clusters::find_min_distance(cluster *&n1, cluster *&n2)
 {
-    // Create temporary Cluster and Distance Nodes
     cluster *curr = NULL;
     cluster_distance *tempStart = NULL;
 
@@ -172,10 +158,8 @@ void clusters::find_min_distance(cluster *&n1, cluster *&n2)
 
     cluster *minClusterNode = NULL;
     cluster_distance *minDistanceNode = NULL;
-    // Set minDistance to max Double value
     double minDistance = std::numeric_limits<double>::max();
 
-    // Go through each DistanceNode and check for minimum value
     for (curr = this->f; curr != NULL; curr = curr->n)
     {
         for (tempStart = curr->col; tempStart != NULL; tempStart = tempStart->nc)
@@ -188,16 +172,13 @@ void clusters::find_min_distance(cluster *&n1, cluster *&n2)
             }
         }
     }
-    // set corresponding ClusterNode of minimum DistanceNode to given ClusterNode C
     n1 = minClusterNode;
-    // Go through each DistanceNode and find matching minimum value
     for (secondCurr = minClusterNode->n; secondCurr != NULL; secondCurr = secondCurr->n)
     {
         for (tempStart = secondCurr->col; tempStart != NULL; tempStart = tempStart->nc)
         {
             if (tempStart->dist == minDistanceNode->dist)
             {
-                // Set minimum distance value to global variable
                 MIN_DISTANCE = minDistanceNode->dist;
                 n2 = secondCurr;
                 return;
@@ -229,9 +210,7 @@ int find_min_ele(std::vector<double> &distances)
 }
 
 std::vector<double> run_formula(cluster *n1, cluster *n2, vector<double> first_vals, vector<double> second_vals)
-// Uses given formula to calculate values to be put into each DistanceNode of added ClusterNode
 {
-    // Initialize and set variables
     vector<double> result;
     cluster_distance *tempOne;
     cluster_distance *tempTwo;
@@ -240,16 +219,12 @@ std::vector<double> run_formula(cluster *n1, cluster *n2, vector<double> first_v
     double numerator = 0.0;
     double denominator = 0.0;
 
-    // Loop through each DistanceNode
     for (tempOne = n1->col, tempTwo = n2->col; tempOne != NULL; tempOne = tempOne->nc, tempTwo = tempTwo->nc)
     {
-        // Only compute values that are not the minimum distance or zero
         if ((tempOne->dist != MIN_DISTANCE && tempOne->dist != 0) && (tempTwo->dist != MIN_DISTANCE && tempTwo->dist != 0))
         {
-            // Compute numerator and denominator of formula
             numerator = (numClusterOne * tempOne->dist) + (numClusterTwo * tempTwo->dist);
             denominator = numClusterOne + numClusterTwo;
-            // Push computed value into vector to be returned
             result.push_back(numerator / denominator);
         }
     }
@@ -259,24 +234,17 @@ std::vector<double> run_formula(cluster *n1, cluster *n2, vector<double> first_v
 
 void clusters::run_upgma()
 {
-    // Create temporary Cluster and Distance Nodes
-    // node *tempHead = this->f;
-
     cluster *clusterOne = NULL;
     cluster *clusterTwo = NULL;
 
     cluster_distance *distanceOne;
     cluster_distance *distanceTwo;
-    // Create vectors to hold distances of DistanceNodes
     std::vector<double> clusterOneDistances;
     std::vector<double> clusterTwoDistances;
     std::vector<double> resultantDistances;
 
-    // Call findMinimum function to locate two ClusterNodes containing the minimum distance in DynMatrix
-    // clusterOne and clusterTwo are the ClusterNodes containing the minimum distance
     find_min_distance(clusterOne, clusterTwo);
 
-    // Store the distances in the two ClusterNodes' clusterOne and clusterTwo in vectors
     for (distanceOne = clusterOne->col; distanceOne != NULL; distanceOne = distanceOne->nc)
     {
         clusterOneDistances.push_back(distanceOne->dist);
@@ -286,62 +254,39 @@ void clusters::run_upgma()
         clusterTwoDistances.push_back(distanceTwo->dist);
     }
 
-    // Use useFormula function to compute average distances and store inside resultant vector
     resultantDistances = run_formula(clusterOne, clusterTwo, clusterOneDistances, clusterTwoDistances);
-    // cout << "clusterOneDistances\n";
-    // for (auto it : clusterOneDistances)
-    // {
-    //   cout << it << " ";
-    // }
-    // cout << "\n";
-    // cout << "clusterTwoDistances\n";
-    // for (auto it : clusterTwoDistances)
-    // {
-    //   cout << it << " ";
-    // }
-    // cout << "\n";
     int min = find_min_ele(clusterOneDistances);
-    // Call combineCluster function to remove the two ClusterNodes and add the new ClusterNode into the DynMatrix
     merge(clusterOne, clusterTwo, resultantDistances, clusterOneDistances[min]);
 }
 
 void clusters::merge(cluster *&n1, cluster *&n2, std::vector<double> values, double val)
 {
-
-    // Set variables to make new ClusterNode name
     string leftparen = "(";
     string comma = ", ";
     string rightparen = ")";
     string doubleDot = ":";
-    // Assign values of vector parameter to new vector
     vector<double> upgmaValues = values;
 
     stringstream namess;
     namess << leftparen << n1->label << doubleDot << val / 2 << comma << n2->label << doubleDot << val / 2 << rightparen;
-    // Construct new ClusterNode name
     string name = namess.str();
     cluster_distance *firstDNCol;
     cluster_distance *firstDNRow;
     cluster *tempAddedClusterNode = NULL;
-    int i = 0; // initialize vector index
-    // Remove the two ClusterNodes containing the minimum distance
+    int i = 0; 
     remove(n1);
     remove(n2);
 
-    // Add a new cluster to the matrix, with 0.0 distance values for rows and columns.
     insert(name);
-    // Update numClusters of newly added ClusterNode to keep track of how many ClusterNodes are in the newly added one
     tempAddedClusterNode = this->l;
     this->cnt = n1->cnt + n2->cnt;
 
-    // Fill distance values of DistanceNodes in newly added ClusterNode with values from given vector
     for (firstDNCol = tempAddedClusterNode->col, firstDNRow = tempAddedClusterNode->row; firstDNCol != firstDNRow; firstDNCol = firstDNCol->nc, firstDNRow = firstDNRow->nr)
     {
         firstDNCol->dist = upgmaValues[i];
         firstDNRow->dist = upgmaValues[i];
         i++;
     }
-    // Ensure pointers are NULL to prevent accessing wrongly linked locations
     firstDNCol->nc = firstDNRow->nr = NULL;
     firstDNCol->nr = firstDNRow->nc = NULL;
 }
