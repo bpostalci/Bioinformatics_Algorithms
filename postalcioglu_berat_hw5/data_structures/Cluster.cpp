@@ -135,7 +135,7 @@ bool clusters::remove(cluster *cluster_to_remove)
             col_next = col_next->nc;
         }
 
-        while(row_prev != NULL)
+        while (row_prev != NULL)
         {
             row_next->nc = row_next;
             row_prev = row_next->nr;
@@ -212,21 +212,19 @@ void clusters::insert(const std::string &label)
 
 int find_min_ele(std::vector<double> &distances)
 {
-    // first remove zeroes
-    for (auto it = distances.begin(); it != distances.end(); ++it)
-    {
-        if (*it == 0)
-        {
-            distances.erase(it);
-        }
-    }
-
     int min = 0;
-    for (u32 i = 1; i < distances.size(); i++)
+    while (distances[min] == 0)
     {
-        if (distances[min] > distances[i])
+        min++;
+    }
+    for (unsigned int i = 0; i < distances.size(); i++)
+    {
+        if (distances[i] != 0)
         {
-            min = i;
+            if (distances[min] > distances[i])
+            {
+                min = i;
+            }
         }
     }
     return min;

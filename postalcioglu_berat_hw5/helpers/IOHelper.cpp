@@ -15,7 +15,8 @@ using namespace std;
 
 void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 {
-	OPTIMIZE_IO
+
+	// OPTIMIZE_IO
 
 	ifstream file;
 	file.open(filename);
@@ -28,6 +29,7 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 
 	unordered_set<string> set;
 	string line;
+
 	while (getline(file, line))
 	{
 		if (!line.empty())
@@ -43,6 +45,8 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 				seqs.push_back(s);
 				set.insert(title);
 				set.insert(seq_str);
+			} else {
+				cout << "yess" << "\n";
 			}
 		}
 	}
