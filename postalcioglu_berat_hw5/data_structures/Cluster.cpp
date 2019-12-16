@@ -9,33 +9,27 @@ double MIN_DISTANCE = 0.0;
 
 void clusters::insert(const std::string &label)
 {
-    // Initialize ClusterNode with name and the number of clusters inside
     cluster *cluster_to_insert = new cluster;
+    ++cluster_to_insert->cnt; 
     cluster_to_insert->label = label;
-    cluster_to_insert->noc = 1; // Used to keep track of how many clusters have been combined into one ClusterNode
         
     if (this->f != NULL)
     {
-        // Reattach pointers of the added ClusterNode and set tail to newly created ClusterNode
         cluster_to_insert->p = this->l;
         this->l->n = cluster_to_insert;
         this->l = cluster_to_insert;
-        // Ensure tail->next is set to NULL
         this->l->n = NULL;
 
-        // Initialize first DistanceNodes
         cluster_distance *f_col = new cluster_distance;
         cluster_distance *f_row = new cluster_distance;
         f_row->dist = f_col->dist = 0.0;
 
-        // Ensure pointers are set to NULL to prevent pointing to wrong locations
         f_row->nc = f_col->nc = NULL;
         f_row->nr = f_col->nr = NULL;
 
         this->l->col = f_col;
         this->l->row = f_row;
 
-        // Attach first DistanceNodes to first column and row of newly added ClusterNode
         cluster_distance *cur_col = f_col;
         cluster_distance *cur_row = f_row;
 
@@ -45,15 +39,12 @@ void clusters::insert(const std::string &label)
         prev_col->nr = cur_col;
         prev_row->nc = cur_row;
 
-        // Go through each DistanceNode and attach pointers like a singly-linked list
         while (prev_col != prev_row)
         {
-            // Initialize DistanceNodes for use
             cluster_distance *new_col = new cluster_distance;
             cluster_distance *new_row = new cluster_distance;
             new_col->dist = new_row->dist = 0.0;
 
-            // Ensure pointers are set to NULL to prevent pointing to wrong locations
             new_row->nc = new_col->nc = NULL;
             new_row->nr = new_col->nr = NULL;
             cur_col = cur_col->nc = new_col;
@@ -65,7 +56,6 @@ void clusters::insert(const std::string &label)
             prev_col->nr = cur_col;
             prev_row->nc = cur_row;
         }
-        // Initialize and attach the last DistanceNode in newly added ClusterNode
         cluster_distance *last_node = new cluster_distance;
         last_node->dist = 0.0;
         cur_col->nc = cur_row->nr = last_node;
@@ -245,8 +235,8 @@ std::vector<double> run_formula(cluster *n1, cluster *n2, vector<double> first_v
     vector<double> result;
     cluster_distance *tempOne;
     cluster_distance *tempTwo;
-    int numClusterOne = n1->noc;
-    int numClusterTwo = n2->noc;
+    int numClusterOne = n1->cnt;
+    int numClusterTwo = n2->cnt;
     double numerator = 0.0;
     double denominator = 0.0;
 
@@ -342,7 +332,7 @@ void clusters::merge(cluster *&n1, cluster *&n2, std::vector<double> values, dou
     insert(name);
     // Update numClusters of newly added ClusterNode to keep track of how many ClusterNodes are in the newly added one
     tempAddedClusterNode = this->l;
-    this->cnt = n1->noc + n2->noc;
+    this->cnt = n1->cnt + n2->cnt;
 
     // Fill distance values of DistanceNodes in newly added ClusterNode with values from given vector
     for (firstDNCol = tempAddedClusterNode->col, firstDNRow = tempAddedClusterNode->row; firstDNCol != firstDNRow; firstDNCol = firstDNCol->nc, firstDNRow = firstDNRow->nr)

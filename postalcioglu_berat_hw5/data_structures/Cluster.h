@@ -18,15 +18,15 @@ struct cluster
     std::string label;
     cluster_distance *row;
     cluster_distance *col;
-    u32 noc = 0;
+    u32 cnt = 0;
 };
 
 struct clusters
 {
 private:
-    cluster *f = NULL; // first node of the cluster
-    cluster *l = NULL; // last node of the cluster
-    u32 cnt;      // number of clusters
+    cluster *f = NULL; // first cluster
+    cluster *l = NULL; // last cluster
+    u32 cnt = 0;       // number of clusters
 public:
     u32 total() {return cnt;}
     cluster *&first() { return f; }
