@@ -11,10 +11,10 @@ struct cluster_distance
     double dist;       // distance
 };
 
-struct node
+struct cluster
 {
-    node *p; // previous node
-    node *n; // next node
+    cluster *p; // previous node
+    cluster *n; // next node
     std::string label;
     cluster_distance *row;
     cluster_distance *col;
@@ -24,17 +24,17 @@ struct node
 struct clusters
 {
 private:
-    node *f = NULL; // first node of the cluster
-    node *l = NULL; // last node of the cluster
+    cluster *f = NULL; // first node of the cluster
+    cluster *l = NULL; // last node of the cluster
     u32 cnt;      // number of clusters
 public:
     u32 total() {return cnt;}
-    node *&first() { return f; }
-    node *&last() { return l; }
+    cluster *&first() { return f; }
+    cluster *&last() { return l; }
     void insert(const std::string &label);
-    void remove(node *node);
-    void find_min_distance(node *&n1, node *&n2);
+    void remove(cluster *node);
+    void find_min_distance(cluster *&n1, cluster *&n2);
     void run_upgma();
-    void merge(node *&n1, node *&n2, std::vector<double> values, double val);
+    void merge(cluster *&n1, cluster *&n2, std::vector<double> values, double val);
 };
-std::vector<double> run_formula(node *n1, node *n2, std::vector<double> first_vals, std::vector<double> second_vals);
+std::vector<double> run_formula(cluster *n1, cluster *n2, std::vector<double> first_vals, std::vector<double> second_vals);

@@ -10,7 +10,7 @@ double MIN_DISTANCE = 0.0;
 void clusters::insert(const std::string &label)
 {
     // Initialize ClusterNode with name and the number of clusters inside
-    node *node_to_insert = new node;
+    cluster *node_to_insert = new cluster;
     node_to_insert->label = label;
     node_to_insert->noc = 1; // Used to keep track of how many clusters have been combined into one ClusterNode
         
@@ -78,12 +78,12 @@ void clusters::insert(const std::string &label)
         this->f = this->l = node_to_insert;
     }
 }
-void clusters::remove(node *node_to_remove)
+void clusters::remove(cluster *node_to_remove)
 {
     // If there is only one ClusterNode left in the list, delete the only node and set pointers to NULL for addCluster to function correctly
     if (node_to_remove == this->f && node_to_remove == this->l)
     {
-        node *tempNode = this->f;
+        cluster *tempNode = this->f;
 
         tempNode->n = NULL;
         tempNode->p = NULL;
@@ -99,8 +99,8 @@ void clusters::remove(node *node_to_remove)
         // reassign head to head->next
         // go down ->nextInColumn until NULL, then go down ->nextInRow until NULL and remove pointers
 
-        node *tempHead = this->f;
-        node *tempHeadRow;
+        cluster *tempHead = this->f;
+        cluster *tempHeadRow;
         cluster_distance *tempVerticalDistance;
         cluster_distance *tempHeadCol;
         this->f = this->f->n;
@@ -148,8 +148,8 @@ void clusters::remove(node *node_to_remove)
         // reattach pointers to cluster node
         // Go down nextInRow and nextInColumn until pointers are equal and remove + reattach pointers
         // go to ->prev and ->next cluster node and traverse down list
-        node *prevNode = node_to_remove->p;
-        node *nextNode = node_to_remove->n;
+        cluster *prevNode = node_to_remove->p;
+        cluster *nextNode = node_to_remove->n;
 
         node_to_remove->p->n = node_to_remove->n;
         node_to_remove->n->p = node_to_remove->p;
@@ -172,15 +172,15 @@ void clusters::remove(node *node_to_remove)
     }
 }
 
-void clusters::find_min_distance(node *&n1, node *&n2)
+void clusters::find_min_distance(cluster *&n1, cluster *&n2)
 {
     // Create temporary Cluster and Distance Nodes
-    node *curr = NULL;
+    cluster *curr = NULL;
     cluster_distance *tempStart = NULL;
 
-    node *secondCurr = NULL;
+    cluster *secondCurr = NULL;
 
-    node *minClusterNode = NULL;
+    cluster *minClusterNode = NULL;
     cluster_distance *minDistanceNode = NULL;
     // Set minDistance to max Double value
     double minDistance = std::numeric_limits<double>::max();
@@ -238,7 +238,7 @@ int find_min_ele(std::vector<double> &distances)
     return min;
 }
 
-std::vector<double> run_formula(node *n1, node *n2, vector<double> first_vals, vector<double> second_vals)
+std::vector<double> run_formula(cluster *n1, cluster *n2, vector<double> first_vals, vector<double> second_vals)
 // Uses given formula to calculate values to be put into each DistanceNode of added ClusterNode
 {
     // Initialize and set variables
@@ -272,8 +272,8 @@ void clusters::run_upgma()
     // Create temporary Cluster and Distance Nodes
     // node *tempHead = this->f;
 
-    node *clusterOne = NULL;
-    node *clusterTwo = NULL;
+    cluster *clusterOne = NULL;
+    cluster *clusterTwo = NULL;
 
     cluster_distance *distanceOne;
     cluster_distance *distanceTwo;
@@ -315,7 +315,7 @@ void clusters::run_upgma()
     merge(clusterOne, clusterTwo, resultantDistances, clusterOneDistances[min]);
 }
 
-void clusters::merge(node *&n1, node *&n2, std::vector<double> values, double val)
+void clusters::merge(cluster *&n1, cluster *&n2, std::vector<double> values, double val)
 {
 
     // Set variables to make new ClusterNode name
@@ -332,7 +332,7 @@ void clusters::merge(node *&n1, node *&n2, std::vector<double> values, double va
     string name = namess.str();
     cluster_distance *firstDNCol;
     cluster_distance *firstDNRow;
-    node *tempAddedClusterNode = NULL;
+    cluster *tempAddedClusterNode = NULL;
     int i = 0; // initialize vector index
     // Remove the two ClusterNodes containing the minimum distance
     remove(n1);
