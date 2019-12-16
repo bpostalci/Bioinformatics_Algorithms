@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-struct node_distance
+struct cluster_distance
 {
-    node_distance *nr; // next row
-    node_distance *nc; // next column
+    cluster_distance *nr; // next row
+    cluster_distance *nc; // next column
     double dist;       // distance
 };
 
@@ -16,8 +16,8 @@ struct node
     node *p; // previous node
     node *n; // next node
     std::string label;
-    node_distance *row;
-    node_distance *col;
+    cluster_distance *row;
+    cluster_distance *col;
     u32 noc = 0;
 };
 

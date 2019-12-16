@@ -24,8 +24,8 @@ void clusters::insert(const std::string &label)
         this->l->n = NULL;
 
         // Initialize first DistanceNodes
-        node_distance *f_col = new node_distance;
-        node_distance *f_row = new node_distance;
+        cluster_distance *f_col = new cluster_distance;
+        cluster_distance *f_row = new cluster_distance;
         f_row->dist = f_col->dist = 0.0;
 
         // Ensure pointers are set to NULL to prevent pointing to wrong locations
@@ -36,11 +36,11 @@ void clusters::insert(const std::string &label)
         this->l->row = f_row;
 
         // Attach first DistanceNodes to first column and row of newly added ClusterNode
-        node_distance *cur_col = f_col;
-        node_distance *cur_row = f_row;
+        cluster_distance *cur_col = f_col;
+        cluster_distance *cur_row = f_row;
 
-        node_distance *prev_col = this->l->p->col;
-        node_distance *prev_row = this->l->p->row;
+        cluster_distance *prev_col = this->l->p->col;
+        cluster_distance *prev_row = this->l->p->row;
 
         prev_col->nr = cur_col;
         prev_row->nc = cur_row;
@@ -49,8 +49,8 @@ void clusters::insert(const std::string &label)
         while (prev_col != prev_row)
         {
             // Initialize DistanceNodes for use
-            node_distance *new_col = new node_distance;
-            node_distance *new_row = new node_distance;
+            cluster_distance *new_col = new cluster_distance;
+            cluster_distance *new_row = new cluster_distance;
             new_col->dist = new_row->dist = 0.0;
 
             // Ensure pointers are set to NULL to prevent pointing to wrong locations
@@ -66,13 +66,13 @@ void clusters::insert(const std::string &label)
             prev_row->nc = cur_row;
         }
         // Initialize and attach the last DistanceNode in newly added ClusterNode
-        node_distance *last_node = new node_distance;
+        cluster_distance *last_node = new cluster_distance;
         last_node->dist = 0.0;
         cur_col->nc = cur_row->nr = last_node;
     }
     else
     {
-        node_distance *f_distance = new node_distance;
+        cluster_distance *f_distance = new cluster_distance;
         f_distance->dist = 0.0;
         node_to_insert->col = node_to_insert->row = f_distance;
         this->f = this->l = node_to_insert;
@@ -101,8 +101,8 @@ void clusters::remove(node *node_to_remove)
 
         node *tempHead = this->f;
         node *tempHeadRow;
-        node_distance *tempVerticalDistance;
-        node_distance *tempHeadCol;
+        cluster_distance *tempVerticalDistance;
+        cluster_distance *tempHeadCol;
         this->f = this->f->n;
         this->f->p->n = NULL;
         this->f->p = NULL;
@@ -132,8 +132,8 @@ void clusters::remove(node *node_to_remove)
 
         this->l = this->l->p;
         this->l->n = NULL;
-        node_distance *tempDistanceRow;
-        node_distance *tempDistanceCol;
+        cluster_distance *tempDistanceRow;
+        cluster_distance *tempDistanceCol;
 
         for (tempDistanceRow = this->l->row, tempDistanceCol = this->l->col; tempDistanceRow != tempDistanceCol; tempDistanceRow = tempDistanceRow->nr, tempDistanceCol = tempDistanceCol->nc)
         {
@@ -154,11 +154,11 @@ void clusters::remove(node *node_to_remove)
         node_to_remove->p->n = node_to_remove->n;
         node_to_remove->n->p = node_to_remove->p;
 
-        node_distance *tempColPrev = prevNode->col;
-        node_distance *tempColNext = nextNode->col;
+        cluster_distance *tempColPrev = prevNode->col;
+        cluster_distance *tempColNext = nextNode->col;
 
-        node_distance *tempRowPrev = prevNode->row;
-        node_distance *tempRowNext = nextNode->row;
+        cluster_distance *tempRowPrev = prevNode->row;
+        cluster_distance *tempRowNext = nextNode->row;
 
         for (; tempColPrev != NULL; tempColPrev = tempColPrev->nc, tempColNext = tempColNext->nc)
         {
@@ -176,12 +176,12 @@ void clusters::find_min_distance(node *&n1, node *&n2)
 {
     // Create temporary Cluster and Distance Nodes
     node *curr = NULL;
-    node_distance *tempStart = NULL;
+    cluster_distance *tempStart = NULL;
 
     node *secondCurr = NULL;
 
     node *minClusterNode = NULL;
-    node_distance *minDistanceNode = NULL;
+    cluster_distance *minDistanceNode = NULL;
     // Set minDistance to max Double value
     double minDistance = std::numeric_limits<double>::max();
 
@@ -243,8 +243,8 @@ std::vector<double> run_formula(node *n1, node *n2, vector<double> first_vals, v
 {
     // Initialize and set variables
     vector<double> result;
-    node_distance *tempOne;
-    node_distance *tempTwo;
+    cluster_distance *tempOne;
+    cluster_distance *tempTwo;
     int numClusterOne = n1->noc;
     int numClusterTwo = n2->noc;
     double numerator = 0.0;
@@ -275,8 +275,8 @@ void clusters::run_upgma()
     node *clusterOne = NULL;
     node *clusterTwo = NULL;
 
-    node_distance *distanceOne;
-    node_distance *distanceTwo;
+    cluster_distance *distanceOne;
+    cluster_distance *distanceTwo;
     // Create vectors to hold distances of DistanceNodes
     std::vector<double> clusterOneDistances;
     std::vector<double> clusterTwoDistances;
@@ -330,8 +330,8 @@ void clusters::merge(node *&n1, node *&n2, std::vector<double> values, double va
     namess << leftparen << n1->label << doubleDot << val / 2 << comma << n2->label << doubleDot << val / 2 << rightparen;
     // Construct new ClusterNode name
     string name = namess.str();
-    node_distance *firstDNCol;
-    node_distance *firstDNRow;
+    cluster_distance *firstDNCol;
+    cluster_distance *firstDNRow;
     node *tempAddedClusterNode = NULL;
     int i = 0; // initialize vector index
     // Remove the two ClusterNodes containing the minimum distance

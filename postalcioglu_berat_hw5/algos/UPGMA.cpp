@@ -18,7 +18,7 @@ void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, stringstream &re
     node *new_node = c->first();
     REP(i, 0, size)
     {
-        node_distance *new_dist = new_node->row;
+        cluster_distance *new_dist = new_node->row;
         REP(j, 0, size)
         {
             new_dist->dist = dm[i][j];
