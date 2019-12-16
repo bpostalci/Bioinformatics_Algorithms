@@ -10,16 +10,16 @@ double MIN_DISTANCE = 0.0;
 void clusters::insert(const std::string &label)
 {
     // Initialize ClusterNode with name and the number of clusters inside
-    cluster *node_to_insert = new cluster;
-    node_to_insert->label = label;
-    node_to_insert->noc = 1; // Used to keep track of how many clusters have been combined into one ClusterNode
+    cluster *cluster_to_insert = new cluster;
+    cluster_to_insert->label = label;
+    cluster_to_insert->noc = 1; // Used to keep track of how many clusters have been combined into one ClusterNode
         
     if (this->f != NULL)
     {
         // Reattach pointers of the added ClusterNode and set tail to newly created ClusterNode
-        node_to_insert->p = this->l;
-        this->l->n = node_to_insert;
-        this->l = node_to_insert;
+        cluster_to_insert->p = this->l;
+        this->l->n = cluster_to_insert;
+        this->l = cluster_to_insert;
         // Ensure tail->next is set to NULL
         this->l->n = NULL;
 
@@ -74,8 +74,8 @@ void clusters::insert(const std::string &label)
     {
         cluster_distance *f_distance = new cluster_distance;
         f_distance->dist = 0.0;
-        node_to_insert->col = node_to_insert->row = f_distance;
-        this->f = this->l = node_to_insert;
+        cluster_to_insert->col = cluster_to_insert->row = f_distance;
+        this->f = this->l = cluster_to_insert;
     }
 }
 void clusters::remove(cluster *node_to_remove)
