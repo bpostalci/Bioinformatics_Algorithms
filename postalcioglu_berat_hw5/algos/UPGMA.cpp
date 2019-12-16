@@ -1,67 +1,38 @@
 #include "UPGMA.h"
+#include "../data_structures/Cluster.h"
 #include <iostream>
 #include <utility>
+#include <memory>
 
 #define REP(i, a, b) for (u32 i = a; i < b; i++)
 
-pair<int, int> min(double **dm, u32 size)
-{
-    pair<int, int> res;
-    int min_i = 1;
-    int min_j = 0;
-    REP(i, 0, size)
-    {
-        REP(j, 0, size)
-        {
-            if (i != j)
-            {
-                if (dm[i][j] < dm[min_i][min_j])
-                {
-                    min_i = i;
-                    min_j = j;
-                }
-            }
-        }
-    }
-
-    res.first = min_i;
-    res.second = min_j;
-    return res;
-}
-
 void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, stringstream &result)
 {
-   
-    for(auto it : seqs) 
+    unique_ptr<clusters> c(new clusters);
+    for (auto it : seqs)
     {
-        cout << it.title << "\n";
+        string label(it.title);
+        label.replace(0, 1, "");
+        c->insert(label);
     }
-    
+    node *new_node = c->first();
+    REP(i, 0, size)
+    {
+        node_distance *new_dist = new_node->row;
+        REP(j, 0, size)
+        {
+            new_dist->dist = dm[i][j];
+            new_dist = new_dist->nr;
+        }
+        new_node = new_node->n;
+    }
+
+    u32 j = 1;
+    while (c->first()->n)
+    {
+        c->run_upgma();
+        ++j;
+    }
+
+    result << c->first()->label;
 }
-
-// void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, stringstream &result)
-// {
-//     if (size == 1)
-//     {
-//         return;
-//     }
-
-//     pair<int, int> mp = min(dm, size);
-//     if (mp.second > mp.first)
-//     {
-//         mp.first = mp.second;
-//         mp.second = mp.first;
-//     }
-
-//     string title1(seqs[mp.second].title);
-//     title1.replace(0, 1, "");
-//     string title2(seqs[mp.first].title);
-//     title2.replace(0, 1, "");
-
-//     double val = (dm[mp.first][mp.second]) / 2;
-//     result << "(" << title1 << ":" << val << ", " << title2 << ":" << val << ")";
-//     cout << result.str() << "\n";
-
-//     // calculate new matrix
-
-// }
