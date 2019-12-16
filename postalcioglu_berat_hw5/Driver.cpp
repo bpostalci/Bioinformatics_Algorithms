@@ -96,6 +96,7 @@ int main(int argc, char **argv)
     fill_sequences_buff(seqs, prg_options.fasta);
     u32 seqs_size = seqs.size();
 
+
     // allocate distance matrix
     double **dm = new double *[seqs_size]; // distance matrix
     REP(i, 0, seqs_size)
@@ -105,16 +106,16 @@ int main(int argc, char **argv)
     construct_distance_matrix(seqs, dm, prg_options);
 
     // print distance matrix
-    // cout << "--- distance matrix ---"
-    //      << "\n";
-    // for (u32 i = 0; i < seqs_size; i++)
-    // {
-    //   for (u32 j = 0; j < seqs_size; j++)
-    //   {
-    //     cout << dm[i][j] << " ";
-    //   }
-    //   cout << "\n";
-    // }
+    cout << "--- distance matrix ---"
+         << "\n";
+    for (u32 i = 0; i < seqs_size; i++)
+    {
+      for (u32 j = 0; j < seqs_size; j++)
+      {
+        cout << dm[i][j] << " ";
+      }
+      cout << "\n";
+    }
 
     stringstream upgma;
     buildUPGMA(dm, seqs_size, seqs, upgma);

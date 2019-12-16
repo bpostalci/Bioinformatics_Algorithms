@@ -2,6 +2,7 @@
 #include <sstream>
 #include <limits>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -10,9 +11,9 @@ double MIN_DISTANCE = 0.0;
 void clusters::insert(const std::string &label)
 {
     cluster *cluster_to_insert = new cluster;
-    ++cluster_to_insert->cnt; 
+    ++cluster_to_insert->cnt;
     cluster_to_insert->label = label;
-        
+
     if (this->f != NULL)
     {
         cluster_to_insert->p = this->l;
@@ -68,48 +69,46 @@ void clusters::insert(const std::string &label)
         this->f = this->l = cluster_to_insert;
     }
 }
-void clusters::remove(cluster *node_to_remove)
+bool clusters::remove(cluster *cluster_to_remove)
 {
-    if (node_to_remove == this->f && node_to_remove == this->l)
+    if (cluster_to_remove == this->f && cluster_to_remove == this->l)
     {
-        cluster *tempNode = this->f;
+        cluster *tmp_cluster = this->f;
+        tmp_cluster->p = tmp_cluster->n = NULL;
+        this->f = this->l = NULL;
+        delete tmp_cluster;
 
-        tempNode->n = NULL;
-        tempNode->p = NULL;
-
-        this->f = NULL;
-        this->l = NULL;
-        delete tempNode;
-        return;
+        return true;
     }
-    if (node_to_remove == this->f)
+    if (cluster_to_remove == this->f)
     {
-        cluster *tempHead = this->f;
-        cluster *tempHeadRow;
-        cluster_distance *tempVerticalDistance;
-        cluster_distance *tempHeadCol;
+        cluster_distance *first_col;
+        cluster_distance *first_col_dist;
+        cluster *tmp_first = this->f;
+        cluster *first_neighbors;
+        
         this->f = this->f->n;
-        this->f->p->n = NULL;
-        this->f->p = NULL;
+        this->f->p = this->f->p->n = NULL;
 
-        for (tempVerticalDistance = tempHead->col; tempVerticalDistance != NULL; tempVerticalDistance = tempVerticalDistance->nc)
+        first_col_dist = tmp_first->col;
+        while (first_col_dist != NULL)
         {
-            tempVerticalDistance->nr = NULL;
+            first_col_dist->nr = NULL;
+            first_col_dist = first_col_dist->nc;
         }
+        first_col = this->f->col->nc;
 
-        tempHeadCol = this->f->col->nc;
-
-        for (tempHeadRow = this->f; tempHeadRow != NULL; tempHeadRow = tempHeadRow->n)
+        for (first_neighbors = this->f; first_neighbors != NULL; first_neighbors = first_neighbors->n)
         {
-            tempHeadRow->col = tempHeadRow->col->nc;
-            tempHeadRow->row = tempHeadCol;
-
-            tempHeadCol = tempHeadCol->nc;
+            first_neighbors->col = first_neighbors->col->nc;
+            first_neighbors->row = first_col;
+            first_col = first_col->nc;
         }
-        tempHead = NULL;
-        return;
+        tmp_first = NULL;
+
+        return true;
     }
-    else if (node_to_remove == this->l)
+    else if (cluster_to_remove == this->l)
     {
         this->l = this->l->p;
         this->l->n = NULL;
@@ -122,14 +121,16 @@ void clusters::remove(cluster *node_to_remove)
             tempDistanceRow->nc = NULL;
         }
         tempDistanceCol->nc = tempDistanceCol->nr = NULL;
+
+        return true;
     }
     else
     {
-        cluster *prevNode = node_to_remove->p;
-        cluster *nextNode = node_to_remove->n;
+        cluster *prevNode = cluster_to_remove->p;
+        cluster *nextNode = cluster_to_remove->n;
 
-        node_to_remove->p->n = node_to_remove->n;
-        node_to_remove->n->p = node_to_remove->p;
+        cluster_to_remove->p->n = cluster_to_remove->n;
+        cluster_to_remove->n->p = cluster_to_remove->p;
 
         cluster_distance *tempColPrev = prevNode->col;
         cluster_distance *tempColNext = nextNode->col;
@@ -146,7 +147,11 @@ void clusters::remove(cluster *node_to_remove)
         {
             tempRowPrev->nc = tempRowNext;
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void clusters::find_min_distance(cluster *&n1, cluster *&n2)
@@ -199,7 +204,7 @@ int find_min_ele(std::vector<double> &distances)
     }
 
     int min = 0;
-    for (unsigned int i = 1; i < distances.size(); i++)
+    for (u32 i = 1; i < distances.size(); i++)
     {
         if (distances[min] > distances[i])
         {
@@ -266,14 +271,14 @@ void clusters::merge(cluster *&n1, cluster *&n2, std::vector<double> values, dou
     string rightparen = ")";
     string doubleDot = ":";
     vector<double> upgmaValues = values;
-
+    
     stringstream namess;
     namess << leftparen << n1->label << doubleDot << val / 2 << comma << n2->label << doubleDot << val / 2 << rightparen;
     string name = namess.str();
     cluster_distance *firstDNCol;
     cluster_distance *firstDNRow;
     cluster *tempAddedClusterNode = NULL;
-    int i = 0; 
+    int i = 0;
     remove(n1);
     remove(n2);
 

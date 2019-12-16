@@ -32,7 +32,7 @@ public:
     cluster *&first() { return f; }
     cluster *&last() { return l; }
     void insert(const std::string &label);
-    void remove(cluster *node);
+    bool remove(cluster *node);
     void find_min_distance(cluster *&n1, cluster *&n2);
     void run_upgma();
     void merge(cluster *&n1, cluster *&n2, std::vector<double> values, double val);
