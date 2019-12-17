@@ -85,12 +85,12 @@ int main(int argc, char **argv)
   {
     string outfile(prg_options.out != NULL ? prg_options.out : "sequences.tree");
 
-    printf("fasta file                   => %s\n", prg_options.fasta);
-    printf("output file                  => %s\n", outfile.c_str());
-    printf("gap opening penalty score    => %d\n", prg_options.gapopen);
-    printf("gap extension penalty score  => %d\n", prg_options.gapext);
-    printf("match score                  => %d\n", prg_options.match);
-    printf("mismatch penalty score       => %d\n", prg_options.mismatch);
+    // printf("fasta file                   => %s\n", prg_options.fasta);
+    // printf("output file                  => %s\n", outfile.c_str());
+    // printf("gap opening penalty score    => %d\n", prg_options.gapopen);
+    // printf("gap extension penalty score  => %d\n", prg_options.gapext);
+    // printf("match score                  => %d\n", prg_options.match);
+    // printf("mismatch penalty score       => %d\n", prg_options.mismatch);
 
     vector<seq> seqs;
     fill_sequences_buff(seqs, prg_options.fasta);

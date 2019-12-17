@@ -1,32 +1,38 @@
 #pragma once
+
 #include <string>
 #include <vector>
+#include "Typedefs.h"
 
-struct DistanceNode {
+namespace upgma
+{
+struct node_branch
+{
   double distance;
-  DistanceNode* nextInColumn;
-  DistanceNode* nextInRow;
+  node_branch *next_col;
+  node_branch *next_row;
 };
 
-struct ClusterNode {
+struct cluster
+{
+  cluster *prev;
+  cluster *next;
+  node_branch *row;
+  node_branch *column;
   std::string name;
-  int numClusters;
-  ClusterNode* prev;
-  ClusterNode* next;
-  DistanceNode* row;
-  DistanceNode* column;
+  int num_of_nodes;
 };
 
-void addCluster(ClusterNode *&head,ClusterNode *&tail,const std::string& name);
+void run_upgma(cluster *&fc, cluster *&lc);
 
-void removeCluster(ClusterNode *&head,ClusterNode *&tail,ClusterNode *toBeRemoved);
+std::vector<double> run_formula(cluster *c1, cluster *c2, std::vector<double> c1_vals, std::vector<double> v2_vals);
 
-void findMinimum(ClusterNode *head,ClusterNode *&C,ClusterNode *&D);
+void insert(cluster *&fc, cluster *&lc, const std::string &name);
 
-void UPGMA(ClusterNode *&head, ClusterNode *&tail);
+void remove(cluster *&fc, cluster *&lc, cluster *c_no_remove);
 
-void combineCluster(ClusterNode *&head, ClusterNode *&tail, ClusterNode *&C, ClusterNode *&D, std::vector<double> values, double val);
+void find_min_distance(cluster *fc, cluster *&c1, cluster *&c2);
 
-std::vector<double> useFormula(ClusterNode *clusterOne, ClusterNode *clusterTwo, std::vector<double> firstValues, std::vector<double> secondValues);
+void merge_clusters(cluster *&fc, cluster *&lc, cluster *&c1, cluster *&c2, std::vector<double> vals, double val);
 
-
+}; // namespace upgma

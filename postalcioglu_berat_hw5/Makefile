@@ -2,7 +2,7 @@
 c = g++ -O3 -std=c++0x -Wall 
 
 objects = objects/Driver.o objects/IOHelper.o objects/NeedlemanWunschAffineAlignment.o objects/UPGMA.o\
-		  objects/Cluster2.o objects/Cluster.o
+		  objects/Cluster2.o
 exe = buildUPGMA
 common_headers = helpers/IOHelper.h data_structures/Typedefs.h data_structures/Seq.h
 
@@ -21,8 +21,8 @@ objects/NeedlemanWunschAffineAlignment.o: algos/NeedlemanWunschAffineAlignment.c
 objects/Cluster2.o: data_structures/Cluster2.cpp data_structures/Cluster2.h
 	$(c) -c data_structures/Cluster2.cpp -o objects/Cluster2.o
 
-objects/Cluster.o: data_structures/Cluster.cpp data_structures/Cluster.h
-	$(c) -c data_structures/Cluster.cpp -o objects/Cluster.o
+# objects/Cluster.o: data_structures/Cluster.cpp data_structures/Cluster.h
+# 	$(c) -c data_structures/Cluster.cpp -o objects/Cluster.o
 
 objects/UPGMA.o: algos/UPGMA.cpp data_structures/Cluster.h
 	$(c) -c algos/UPGMA.cpp -o objects/UPGMA.o

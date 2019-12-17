@@ -9,32 +9,33 @@
 
 void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, const string &outfile)
 {
-    ClusterNode *head = NULL;
-    ClusterNode *tail = NULL;
+    upgma::cluster *fc = NULL;
+    upgma::cluster *lc = NULL;
     for (auto it : seqs)
     {
         string label(it.title);
         label.replace(0, 1, "");
-        addCluster(head, tail, label);
+        insert(fc, lc, label);
     }
 
-    ClusterNode *node = head;
+    upgma::cluster *curc = fc;
     REP(i, 0, size)
     {
-        DistanceNode *newDistance = node->row;
+        upgma::node_branch *branch = curc->row;
         REP(j, 0, size)
         {
-            newDistance->distance = dm[i][j];
-            newDistance = newDistance->nextInRow;
+            branch->distance = dm[i][j];
+            branch = branch->next_row;
         }
-        node = node->next;
+        curc = curc->next;
     }
     int j = 1;
-    while (head->next)
+    while (fc->next)
     {
-        UPGMA(head, tail);
+        run_upgma(fc, lc);
         j++;
     }
-    head->name += ";";
-    write_tree(head->name, outfile);
+    cout << fc->name << "\n";
+    fc->name += ";";
+    write_tree(fc->name, outfile);
 }
