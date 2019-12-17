@@ -8,6 +8,4 @@
 using namespace std;
 
 void fill_sequences_buff(vector<seq> &seqs, const string &filename);
-void fill_sequence_buff(string &seq, string &title, const string &filename);
-void fill_profile_buff(vector<string> &seqs, vector<string> &seqs_titles, const string &filename);
-void write_alignment(const string &aln, const string &output_file);
+void write_tree(const string &tree, const string &output_file);

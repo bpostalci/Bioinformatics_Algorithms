@@ -8,4 +8,4 @@
 
 using namespace std;
 
-void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, stringstream &result);
+void buildUPGMA(double **dm, u32 size, const vector<seq> &seqs, const string &outfile);

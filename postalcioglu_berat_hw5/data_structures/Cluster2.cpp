@@ -13,13 +13,13 @@ void addCluster(ClusterNode *&head, ClusterNode *&tail, const std::string &name)
 {
   ClusterNode *newNode = new ClusterNode;
   newNode->name = name;
-  newNode->numClusters = 1; 
+  newNode->numClusters = 1;
 
   if (head == NULL)
-  { 
+  {
     DistanceNode *firstDistance = new DistanceNode;
     firstDistance->distance = 0.0;
-
+    firstDistance->nextInRow = firstDistance->nextInColumn = NULL;
     head = tail = newNode;
     head->column = head->row = firstDistance;
   }
@@ -180,7 +180,8 @@ void findMinimum(ClusterNode *head, ClusterNode *&C, ClusterNode *&D)
 
   for (curr = head; curr != NULL; curr = curr->next)
   {
-    for (tempStart = curr->column; tempStart != NULL; tempStart = tempStart->nextInColumn)
+    tempStart = curr->column;
+    for (; tempStart != NULL; tempStart = tempStart->nextInColumn)
     {
       if (tempStart->distance < minDistance && tempStart->distance != 0)
       {
@@ -270,7 +271,7 @@ void combineCluster(ClusterNode *&head, ClusterNode *&tail, ClusterNode *&C, Clu
   DistanceNode *firstDNCol;
   DistanceNode *firstDNRow;
   ClusterNode *tempAddedClusterNode = NULL;
-  int i = 0; 
+  int i = 0;
   removeCluster(head, tail, C);
   removeCluster(head, tail, D);
 
@@ -311,5 +312,3 @@ std::vector<double> useFormula(ClusterNode *clusterOne, ClusterNode *clusterTwo,
 
   return result;
 }
-
-
