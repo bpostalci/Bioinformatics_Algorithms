@@ -15,7 +15,7 @@ using namespace std;
 
 void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 {
-	// OPTIMIZE_IO
+	OPTIMIZE_IO
 
 	ifstream file;
 	file.open(filename);
@@ -55,6 +55,8 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 
 void write_tree(const string &tree, const string &output_file)
 {
+	OPTIMIZE_IO
+	
 	ofstream out;
 	out.open(output_file);
 	if (!out.is_open())
