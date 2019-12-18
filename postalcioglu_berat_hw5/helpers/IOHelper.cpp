@@ -44,9 +44,7 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 				seqs.push_back(s);
 				set.insert(title);
 				set.insert(seq_str);
-			} else {
-				cout << "yess" << "\n";
-			}
+			} 
 		}
 	}
 
@@ -56,7 +54,7 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 void write_tree(const string &tree, const string &output_file)
 {
 	OPTIMIZE_IO
-	
+
 	ofstream out;
 	out.open(output_file);
 	if (!out.is_open())
@@ -64,7 +62,7 @@ void write_tree(const string &tree, const string &output_file)
 		cout << output_file << " file cannot be opened...\n";
 		exit(1);
 	}
-	cout << "writing tree to: " << output_file << "\n";
+	cout << "writing tree to => " << output_file << "\n";
 	out << tree;
 
 	out.close();

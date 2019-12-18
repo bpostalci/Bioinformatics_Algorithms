@@ -91,6 +91,7 @@ int main(int argc, char **argv)
     printf("gap extension penalty score  => %d\n", prg_options.gapext);
     printf("match score                  => %d\n", prg_options.match);
     printf("mismatch penalty score       => %d\n", prg_options.mismatch);
+    printf("\n* sequence names and sequences must be unique in file: %s\n", prg_options.fasta);
 
     vector<seq> seqs;
     fill_sequences_buff(seqs, prg_options.fasta);
