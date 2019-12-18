@@ -21,10 +21,7 @@ objects/NeedlemanWunschAffineAlignment.o: algos/NeedlemanWunschAffineAlignment.c
 objects/Cluster2.o: data_structures/Cluster2.cpp data_structures/Cluster2.h
 	$(c) -c data_structures/Cluster2.cpp -o objects/Cluster2.o
 
-# objects/Cluster.o: data_structures/Cluster.cpp data_structures/Cluster.h
-# 	$(c) -c data_structures/Cluster.cpp -o objects/Cluster.o
-
-objects/UPGMA.o: algos/UPGMA.cpp data_structures/Cluster.h
+objects/UPGMA.o: algos/UPGMA.cpp data_structures/Cluster2.h
 	$(c) -c algos/UPGMA.cpp -o objects/UPGMA.o
 
 .PHONY: clean
