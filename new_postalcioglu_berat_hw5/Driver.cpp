@@ -1,5 +1,5 @@
 #include "algos/NeedlemanWunschAffineAlignment.h"
-#include "algos/UPGMA.h"
+#include "algos/MYUPGMA.h"
 #include "data_structures/Typedefs.h"
 #include "data_structures/Seq.h"
 #include "helpers/IOHelper.h"
@@ -91,7 +91,6 @@ int main(int argc, char **argv)
     printf("gap extension penalty score  => %d\n", prg_options.gapext);
     printf("match score                  => %d\n", prg_options.match);
     printf("mismatch penalty score       => %d\n", prg_options.mismatch);
-    printf("\n* sequence names and sequences must be unique in file: %s\n", prg_options.fasta);
 
     vector<seq> seqs;
     fill_sequences_buff(seqs, prg_options.fasta);
@@ -107,18 +106,18 @@ int main(int argc, char **argv)
     construct_distance_matrix(seqs, dm, prg_options);
 
     // print distance matrix
-     cout << "--- distance matrix ---"
-          << "\n";
-     for (u32 i = 0; i < seqs_size; i++)
-     {
-       for (u32 j = 0; j < seqs_size; j++)
-       {
-         cout << dm[i][j] << " ";
-       }
-       cout << "\n";
-     }
+    // cout << "--- distance matrix ---"
+    //      << "\n";
+    // for (u32 i = 0; i < seqs_size; i++)
+    // {
+    //   for (u32 j = 0; j < seqs_size; j++)
+    //   {
+    //     cout << dm[i][j] << " ";
+    //   }
+    //   cout << "\n";
+    // }
 
-    buildUPGMA(dm, seqs_size, seqs, outfile);
+    build_UPGMA(dm, seqs_size, seqs, outfile);
 
     // free memory
     REP(i, 0, seqs_size)

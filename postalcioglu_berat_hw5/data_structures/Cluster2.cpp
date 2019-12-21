@@ -8,204 +8,8 @@
 
 using namespace std;
 
-double MIN_DISTANCE = 0.0;
-void addCluster(ClusterNode *&head, ClusterNode *&tail, const std::string &name)
-{
-  ClusterNode *newNode = new ClusterNode;
-  newNode->name = name;
-  newNode->numClusters = 1; 
 
-  if (head == NULL)
-  { 
-    DistanceNode *firstDistance = new DistanceNode;
-    firstDistance->distance = 0.0;
-
-    head = tail = newNode;
-    head->column = head->row = firstDistance;
-  }
-
-  else
-  {
-    newNode->prev = tail;
-    tail->next = newNode;
-    tail = newNode;
-    tail->next = NULL;
-
-    DistanceNode *firstCol = new DistanceNode;
-    DistanceNode *firstRow = new DistanceNode;
-    firstCol->distance = 0.0;
-    firstRow->distance = 0.0;
-
-    firstCol->nextInColumn = NULL;
-    firstCol->nextInRow = NULL;
-
-    firstRow->nextInColumn = NULL;
-    firstRow->nextInRow = NULL;
-
-    tail->column = firstCol;
-    tail->row = firstRow;
-
-    DistanceNode *currCol = tail->column;
-    DistanceNode *currRow = tail->row;
-
-    DistanceNode *prevCol = tail->prev->column;
-    DistanceNode *prevRow = tail->prev->row;
-
-    prevCol->nextInRow = currCol;
-    prevRow->nextInColumn = currRow;
-
-    while (prevCol != prevRow)
-    {
-      DistanceNode *newCol = new DistanceNode;
-      DistanceNode *newRow = new DistanceNode;
-      newCol->distance = 0.0;
-      newRow->distance = 0.0;
-
-      newCol->nextInColumn = NULL;
-      newCol->nextInRow = NULL;
-
-      newRow->nextInColumn = NULL;
-      newRow->nextInRow = NULL;
-
-      currCol->nextInColumn = newCol;
-      currRow->nextInRow = newRow;
-
-      currCol = currCol->nextInColumn;
-      currRow = currRow->nextInRow;
-
-      prevCol = prevCol->nextInColumn;
-      prevRow = prevRow->nextInRow;
-
-      prevCol->nextInRow = currCol;
-      prevRow->nextInColumn = currRow;
-    }
-    DistanceNode *edgeNode = new DistanceNode;
-    edgeNode->distance = 0.0;
-    currCol->nextInColumn = currRow->nextInRow = edgeNode;
-  }
-}
-
-void removeCluster(ClusterNode *&head, ClusterNode *&tail, ClusterNode *toBeRemoved)
-{
-
-  if (toBeRemoved == head && toBeRemoved == tail)
-  {
-    ClusterNode *tempNode = head;
-
-    tempNode->next = NULL;
-    tempNode->prev = NULL;
-
-    head = NULL;
-    tail = NULL;
-    delete tempNode;
-    return;
-  }
-  if (toBeRemoved == head)
-  {
-    ClusterNode *tempHead = head;
-    ClusterNode *tempHeadRow;
-    DistanceNode *tempVerticalDistance;
-    DistanceNode *tempHeadCol;
-    head = head->next;
-    head->prev->next = NULL;
-    head->prev = NULL;
-
-    for (tempVerticalDistance = tempHead->column; tempVerticalDistance != NULL; tempVerticalDistance = tempVerticalDistance->nextInColumn)
-    {
-      tempVerticalDistance->nextInRow = NULL;
-    }
-
-    tempHeadCol = head->column->nextInColumn;
-
-    for (tempHeadRow = head; tempHeadRow != NULL; tempHeadRow = tempHeadRow->next)
-    {
-      tempHeadRow->column = tempHeadRow->column->nextInColumn;
-      tempHeadRow->row = tempHeadCol;
-
-      tempHeadCol = tempHeadCol->nextInColumn;
-    }
-    tempHead = NULL;
-    return;
-  }
-  else if (toBeRemoved == tail)
-  {
-    tail = tail->prev;
-    tail->next = NULL;
-    DistanceNode *tempDistanceRow;
-    DistanceNode *tempDistanceCol;
-
-    for (tempDistanceRow = tail->row, tempDistanceCol = tail->column; tempDistanceRow != tempDistanceCol; tempDistanceRow = tempDistanceRow->nextInRow, tempDistanceCol = tempDistanceCol->nextInColumn)
-    {
-      tempDistanceCol->nextInRow = NULL;
-      tempDistanceRow->nextInColumn = NULL;
-    }
-    tempDistanceCol->nextInColumn = tempDistanceCol->nextInRow = NULL;
-  }
-  else
-  {
-    ClusterNode *prevNode = toBeRemoved->prev;
-    ClusterNode *nextNode = toBeRemoved->next;
-
-    toBeRemoved->prev->next = toBeRemoved->next;
-    toBeRemoved->next->prev = toBeRemoved->prev;
-
-    DistanceNode *tempColPrev = prevNode->column;
-    DistanceNode *tempColNext = nextNode->column;
-
-    DistanceNode *tempRowPrev = prevNode->row;
-    DistanceNode *tempRowNext = nextNode->row;
-
-    for (; tempColPrev != NULL; tempColPrev = tempColPrev->nextInColumn, tempColNext = tempColNext->nextInColumn)
-    {
-      tempColPrev->nextInRow = tempColNext;
-    }
-
-    for (; tempRowPrev != NULL; tempRowPrev = tempRowPrev->nextInRow, tempRowNext = tempRowNext->nextInRow)
-    {
-      tempRowPrev->nextInColumn = tempRowNext;
-    }
-  }
-}
-
-void findMinimum(ClusterNode *head, ClusterNode *&C, ClusterNode *&D)
-{
-  ClusterNode *curr = NULL;
-  DistanceNode *tempStart = NULL;
-
-  ClusterNode *secondCurr = NULL;
-
-  ClusterNode *minClusterNode = NULL;
-  DistanceNode *minDistanceNode = NULL;
-  double minDistance = std::numeric_limits<double>::max();
-
-  for (curr = head; curr != NULL; curr = curr->next)
-  {
-    for (tempStart = curr->column; tempStart != NULL; tempStart = tempStart->nextInColumn)
-    {
-      if (tempStart->distance < minDistance && tempStart->distance != 0)
-      {
-        minDistance = tempStart->distance;
-        minClusterNode = curr;
-        minDistanceNode = tempStart;
-      }
-    }
-  }
-  C = minClusterNode;
-  for (secondCurr = minClusterNode->next; secondCurr != NULL; secondCurr = secondCurr->next)
-  {
-    for (tempStart = secondCurr->column; tempStart != NULL; tempStart = tempStart->nextInColumn)
-    {
-      if (tempStart->distance == minDistanceNode->distance)
-      {
-        MIN_DISTANCE = minDistanceNode->distance;
-        D = secondCurr;
-        return;
-      }
-    }
-  }
-}
-
-int findMin(std::vector<double> &distances)
+int find_min_distance_val(vector<double> &distances)
 {
   int min = 0;
   while (distances[min] == 0)
@@ -225,91 +29,286 @@ int findMin(std::vector<double> &distances)
   return min;
 }
 
-void UPGMA(ClusterNode *&head, ClusterNode *&tail)
+static double GLOBAL_MIN_DISTANCE = 0.0;
+void find_min_distance(cluster *fc, cluster *&c1, cluster *&c2)
 {
-  ClusterNode *tempHead = head;
+  double min_distance = numeric_limits<double>::max();
 
-  ClusterNode *clusterOne = NULL;
-  ClusterNode *clusterTwo = NULL;
+  node_branch *tmp_branch = NULL;
+  cluster *min_cluster = NULL;
+  node_branch *min_branch = NULL;
+  cluster *other_cluster = NULL;
 
-  DistanceNode *distanceOne;
-  DistanceNode *distanceTwo;
-  std::vector<double> clusterOneDistances;
-  std::vector<double> clusterTwoDistances;
-  std::vector<double> resultantDistances;
-
-  findMinimum(tempHead, clusterOne, clusterTwo);
-  for (distanceOne = clusterOne->column; distanceOne != NULL; distanceOne = distanceOne->nextInColumn)
+  cluster *current_cluster = fc;
+  while (current_cluster != NULL)
   {
-    clusterOneDistances.push_back(distanceOne->distance);
-  }
-  for (distanceTwo = clusterTwo->column; distanceTwo != NULL; distanceTwo = distanceTwo->nextInColumn)
-  {
-    clusterTwoDistances.push_back(distanceTwo->distance);
-  }
+    tmp_branch = current_cluster->column;
+    while (tmp_branch != NULL)
+    {
+      if (tmp_branch->distance < min_distance && tmp_branch->distance != 0)
+      {
+        min_distance = tmp_branch->distance;
+        min_cluster = current_cluster;
+        min_branch = tmp_branch;
+      }
+      tmp_branch = tmp_branch->next_col;
+    }
 
-  resultantDistances = useFormula(clusterOne, clusterTwo, clusterOneDistances, clusterTwoDistances);
-  int min = findMin(clusterOneDistances);
-  combineCluster(head, tail, clusterOne, clusterTwo, resultantDistances, clusterOneDistances[min]);
+    current_cluster = current_cluster->next;
+  }
+  c1 = min_cluster;
+
+  other_cluster = min_cluster->next;
+  while (other_cluster != NULL)
+  {
+    tmp_branch = other_cluster->column;
+    while (tmp_branch != NULL)
+    {
+      if (tmp_branch->distance == min_branch->distance)
+      {
+        GLOBAL_MIN_DISTANCE = min_branch->distance;
+        c2 = other_cluster;
+        return;
+      }
+      tmp_branch = tmp_branch->next_col;
+    }
+
+    other_cluster = other_cluster->next;
+  }
 }
 
-void combineCluster(ClusterNode *&head, ClusterNode *&tail, ClusterNode *&C, ClusterNode *&D, std::vector<double> values, double val)
+void run_upgma(cluster *&fc, cluster *&lc)
 {
-  std::string leftparen = "(";
-  std::string comma = ", ";
-  std::string rightparen = ")";
-  std::string doubleDot = ":";
-  std::vector<double> upgmaValues = values;
+  vector<double> c1_dists;
+  vector<double> c2_dists;
 
-  std::stringstream namess;
+  cluster *c1 = NULL;
+  cluster *c2 = NULL;
+  find_min_distance(fc, c1, c2);
+
+  node_branch *first_branch = c1->column;
+  while (first_branch != NULL)
+  {
+    c1_dists.push_back(first_branch->distance);
+    first_branch = first_branch->next_col;
+  }
+
+  node_branch *second_branch = c2->column;
+  while (second_branch != NULL)
+  {
+    c2_dists.push_back(second_branch->distance);
+    second_branch = second_branch->next_col;
+  }
+  vector<double> res_dists = run_formula(c1, c2, c1_dists, c2_dists);
+  int min = find_min_distance_val(c1_dists);
+  merge_clusters(fc, lc, c1, c2, res_dists, c1_dists[min]);
+}
+
+void merge_clusters(cluster *&fc, cluster *&lc, cluster *&c1, cluster *&c2, vector<double> vals, double val)
+{
+  stringstream namess;
   namess.setf(ios::fixed);
   namess.precision(3);
   double weight = val / 2;
-  namess << leftparen << C->name << doubleDot << weight << comma << D->name << doubleDot << weight << rightparen;
-  std::string name = namess.str();
-  DistanceNode *firstDNCol;
-  DistanceNode *firstDNRow;
-  ClusterNode *tempAddedClusterNode = NULL;
-  int i = 0; 
-  removeCluster(head, tail, C);
-  removeCluster(head, tail, D);
+  namess << "(" << c1->name << ":" << weight << ", " << c2->name << ":" << weight << ")";
+  string name = namess.str();
+  node_branch *first_branch_col;
+  node_branch *first_branch_row;
+  remove(fc, lc, c1);
+  remove(fc, lc, c2);
+  insert(fc, lc, name);
+  cluster *new_cluster = lc;
+  new_cluster->num_of_nodes = c1->num_of_nodes + c2->num_of_nodes;
 
-  addCluster(head, tail, name);
-  tempAddedClusterNode = tail;
-  tempAddedClusterNode->numClusters = C->numClusters + D->numClusters;
+  first_branch_col = new_cluster->column;
+  first_branch_row = new_cluster->row;
 
-  for (firstDNCol = tempAddedClusterNode->column, firstDNRow = tempAddedClusterNode->row; firstDNCol != firstDNRow; firstDNCol = firstDNCol->nextInColumn, firstDNRow = firstDNRow->nextInRow)
+  for (u32 i = 0; (first_branch_col != first_branch_row); i++)
   {
+    if (i < vals.size())
+    {
+      first_branch_col->distance = vals[i];
+      first_branch_row->distance = vals[i];
+    }
+    else
+    {
+      const double tmp_val = 1.0;
+      first_branch_col->distance = tmp_val;
+      first_branch_row->distance = tmp_val;
+    }
 
-    firstDNCol->distance = upgmaValues[i];
-    firstDNRow->distance = upgmaValues[i];
-    i++;
+    first_branch_col = first_branch_col->next_col;
+    first_branch_row = first_branch_row->next_row;
   }
-  firstDNCol->nextInColumn = firstDNRow->nextInRow = NULL;
-  firstDNCol->nextInRow = firstDNRow->nextInColumn = NULL;
+
+  first_branch_col->next_col = NULL;
+  first_branch_row->next_row = NULL;
+  first_branch_col->next_row = NULL;
+  first_branch_row->next_col = NULL;
 }
 
-std::vector<double> useFormula(ClusterNode *clusterOne, ClusterNode *clusterTwo, std::vector<double> firstValues, std::vector<double> secondValues)
+void insert(cluster *&fc, cluster *&lc, const string &name)
 {
-  std::vector<double> result;
-  DistanceNode *tempOne;
-  DistanceNode *tempTwo;
-  int numClusterOne = clusterOne->numClusters;
-  int numClusterTwo = clusterTwo->numClusters;
-  double numerator = 0.0;
-  double denominator = 0.0;
+  cluster *cluster_to_insert = new cluster;
+  cluster_to_insert->num_of_nodes = 1;
+  cluster_to_insert->name = name;
 
-  for (tempOne = clusterOne->column, tempTwo = clusterTwo->column; tempOne != NULL; tempOne = tempOne->nextInColumn, tempTwo = tempTwo->nextInColumn)
+  if (fc != NULL)
   {
-    if ((tempOne->distance != MIN_DISTANCE && tempOne->distance != 0) && (tempTwo->distance != MIN_DISTANCE && tempTwo->distance != 0))
+    cluster_to_insert->prev = lc;
+    lc->next = cluster_to_insert;
+    lc = cluster_to_insert;
+    lc->next = NULL;
+
+    node_branch *branch_col = new node_branch;
+    node_branch *branch_row = new node_branch;
+
+    lc->column = branch_col;
+    lc->row = branch_row;
+
+    node_branch *prev_branch_col = lc->prev->column;
+    node_branch *prev_branch_row = lc->prev->row;
+    node_branch *cur_branch_col = lc->column;
+    node_branch *cur_branch_row = lc->row;
+
+    prev_branch_col->next_row = cur_branch_col;
+    prev_branch_row->next_col = cur_branch_row;
+
+    while (prev_branch_col != prev_branch_row)
     {
-      numerator = (numClusterOne * tempOne->distance) + (numClusterTwo * tempTwo->distance);
-      denominator = numClusterOne + numClusterTwo;
-      result.push_back(numerator / denominator);
+      node_branch *new_branch_col = new node_branch;
+      node_branch *new_branch_row = new node_branch;
+
+      cur_branch_col->next_col = new_branch_col;
+      cur_branch_row->next_row = new_branch_row;
+      cur_branch_col = cur_branch_col->next_col;
+      cur_branch_row = cur_branch_row->next_row;
+
+      prev_branch_col = prev_branch_col->next_col;
+      prev_branch_row = prev_branch_row->next_row;
+      prev_branch_col->next_row = cur_branch_col;
+      prev_branch_row->next_col = cur_branch_row;
+    }
+    cur_branch_row->next_row = cur_branch_col->next_col = new node_branch;
+  }
+  else
+  {
+    fc = cluster_to_insert;
+    lc = cluster_to_insert;
+    fc->column = fc->row = new node_branch;
+  }
+}
+
+void remove(cluster *&fc, cluster *&lc, cluster *c_to_remove)
+{
+  if (c_to_remove == fc && c_to_remove == lc)
+  {
+    cluster *tmp_node = fc;
+
+    tmp_node->next = NULL;
+    tmp_node->prev = NULL;
+
+    fc = NULL;
+    lc = NULL;
+    // delete tmp_node;
+    return;
+  }
+  if (c_to_remove == lc)
+  {
+    lc = lc->prev;
+    lc->next = NULL;
+    node_branch *tmp_row_branch;
+    node_branch *tmp_col_branch;
+
+    tmp_row_branch = lc->row;
+    tmp_col_branch = lc->column;
+    while (tmp_row_branch != tmp_col_branch)
+    {
+      tmp_row_branch = tmp_row_branch->next_row;
+      tmp_col_branch = tmp_col_branch->next_col;
+    }
+    tmp_col_branch->next_col = NULL;
+    tmp_col_branch->next_row = NULL;
+  }
+  else if (c_to_remove == fc)
+  {
+    cluster *tmp_first = fc;
+    cluster *tmp_first_row;
+    node_branch *tmp_vert_branch;
+    node_branch *tmp_first_col;
+    fc = fc->next;
+    fc->prev->next = NULL;
+    fc->prev = NULL;
+
+    tmp_vert_branch = tmp_first->column;
+    while (tmp_vert_branch != NULL)
+    {
+      tmp_vert_branch->next_row = NULL;
+      tmp_vert_branch = tmp_vert_branch->next_col;
+    }
+    tmp_first_col = fc->column->next_col;
+
+    tmp_first_row = fc;
+    while (tmp_first_row != NULL)
+    {
+      tmp_first_row->column = tmp_first_row->column->next_col;
+      tmp_first_row->row = tmp_first_col;
+
+      tmp_first_col = tmp_first_col->next_col;
+      tmp_first_row = tmp_first_row->next;
+    }
+    tmp_first = NULL;
+    return;
+  }
+  else
+  {
+    cluster *prev_node = c_to_remove->prev;
+    cluster *next_node = c_to_remove->next;
+    c_to_remove->prev->next = c_to_remove->next;
+    c_to_remove->next->prev = c_to_remove->prev;
+    node_branch *tmp_col_prev = prev_node->column;
+    node_branch *tmp_col_next = next_node->column;
+
+    node_branch *tmp_row_prev = prev_node->row;
+    node_branch *tmp_row_next = next_node->row;
+
+    while (tmp_col_prev != NULL)
+    {
+      tmp_col_prev->next_row = tmp_col_next;
+      tmp_col_prev = tmp_col_prev->next_col;
+      tmp_col_next = tmp_col_next->next_col;
+    }
+
+    while (tmp_row_prev != NULL)
+    {
+      tmp_row_prev->next_col = tmp_row_next;
+      tmp_row_prev = tmp_row_prev->next_row;
+      tmp_row_next = tmp_row_next->next_row;
     }
   }
-
-  return result;
 }
 
 
+
+vector<double> run_formula(cluster *c1, cluster *c2, vector<double> c1_vals, vector<double> v2_vals)
+{
+  vector<double> res_vec;
+  double num = 0.0;
+  long double denom = 0.0;
+
+  node_branch *first_branch = c1->column;
+  node_branch *second_branch = c2->column;
+  while (first_branch != NULL)
+  {
+    if ((first_branch->distance != GLOBAL_MIN_DISTANCE && first_branch->distance != 0) && (second_branch->distance != GLOBAL_MIN_DISTANCE && second_branch->distance != 0))
+    {
+      num = (c1->num_of_nodes * first_branch->distance) + (c2->num_of_nodes * second_branch->distance);
+      denom = (c1->num_of_nodes + c2->num_of_nodes);
+      res_vec.push_back(num / denom);
+    }
+    first_branch = first_branch->next_col;
+    second_branch = second_branch->next_col;
+  }
+
+  return res_vec;
+}
