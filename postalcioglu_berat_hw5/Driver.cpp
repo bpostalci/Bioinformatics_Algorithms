@@ -107,16 +107,16 @@ int main(int argc, char **argv)
     construct_distance_matrix(seqs, dm, prg_options);
 
     // print distance matrix
-    // cout << "--- distance matrix ---"
-    //      << "\n";
-    // for (u32 i = 0; i < seqs_size; i++)
-    // {
-    //   for (u32 j = 0; j < seqs_size; j++)
-    //   {
-    //     cout << dm[i][j] << " ";
-    //   }
-    //   cout << "\n";
-    // }
+     cout << "--- distance matrix ---"
+          << "\n";
+     for (u32 i = 0; i < seqs_size; i++)
+     {
+       for (u32 j = 0; j < seqs_size; j++)
+       {
+         cout << dm[i][j] << " ";
+       }
+       cout << "\n";
+     }
 
     buildUPGMA(dm, seqs_size, seqs, outfile);
 

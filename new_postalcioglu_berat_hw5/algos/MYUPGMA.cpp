@@ -2,31 +2,32 @@
 #include "../data_structures/MyCluster.h"
 #include "../helpers/IOHelper.h"
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <sstream>
 #include <limits>
 
-#define REP(i, start, end) for(u32 i = start; i < end; i++)
+#define REP(i, start, end) for (u32 i = start; i < end; i++)
 
 using namespace std;
 
-u32 calc_num_of_nodes(string cluster)
+u32 calc_num_of_nodes(const string &cluster)
 {
 	u32 result = 1;
 	REP(i, 0, cluster.size())
 	{
-		if (cluster[i] == ',') result++;
+		if (cluster[i] == ',')
+			result++;
 	}
 	return result;
 }
 
-void run_algorithm(map<string, vector<neighbor>>& al)
+void run_algorithm(unordered_map<string, vector<neighbor>> &al)
 {
 	// find min distance
 	string min_cluster_name;
 	u32 min_neighbor_index = 0;
 	double min_distance = numeric_limits<double>::max();
-	for (auto node : al)
+	for (const auto &node : al)
 	{
 		REP(i, 0, node.second.size())
 		{
@@ -51,9 +52,10 @@ void run_algorithm(map<string, vector<neighbor>>& al)
 	string min_neighbor_name = al[min_cluster_name][min_neighbor_index].name;
 	new_namess << leftp << min_cluster_name << doubledot << weight << comma << min_neighbor_name << doubledot << weight << rightp;
 
-	map<string, double> common_neighbor_vals;
+	// run upgma formula
+	unordered_map<string, double> common_neighbor_vals;
 	u32 c1_num_of_nodes = calc_num_of_nodes(min_cluster_name);
-	for (auto neighbor : al[min_cluster_name])
+	for (const auto &neighbor : al[min_cluster_name])
 	{
 		if (neighbor.name != min_neighbor_name)
 		{
@@ -64,7 +66,7 @@ void run_algorithm(map<string, vector<neighbor>>& al)
 	}
 
 	u32 c2_num_of_nodes = calc_num_of_nodes(min_neighbor_name);
-	for (auto neighbor : al[min_neighbor_name])
+	for (const auto &neighbor : al[min_neighbor_name])
 	{
 		if (common_neighbor_vals.find(neighbor.name) != common_neighbor_vals.end())
 		{
@@ -75,7 +77,7 @@ void run_algorithm(map<string, vector<neighbor>>& al)
 	}
 
 	vector<neighbor> new_neighbors;
-	for (auto it : common_neighbor_vals)
+	for (auto &it : common_neighbor_vals)
 	{
 		it.second = it.second / (c1_num_of_nodes + c2_num_of_nodes);
 		new_neighbors.push_back(neighbor(it.first, it.second));
@@ -88,7 +90,7 @@ void run_algorithm(map<string, vector<neighbor>>& al)
 	al.erase(min_neighbor_name);
 
 	// remove erased clusters from other clusters
-	for (auto node : al)
+	for (const auto& node : al)
 	{
 		vector<u32> indexes_to_remove;
 		vector<neighbor> neighbors = node.second;
@@ -118,19 +120,19 @@ void run_algorithm(map<string, vector<neighbor>>& al)
 			double distance = 0.0;
 			for (auto neighbor : al[new_name])
 			{
-				if (neighbor.name == node.first) {
+				if (neighbor.name == node.first)
+				{
 					distance = neighbor.distance;
 				}
 			}
 			node.second.push_back(neighbor(new_name, distance));
 		}
-
 	}
 }
 
-void build_UPGMA(double** dm, u32 size, const vector<seq>& seqs, const string& outfile)
+void build_UPGMA(double **dm, u32 size, const vector<seq> &seqs, const string &outfile)
 {
-	map<string, vector<neighbor>> adjacency_list;
+	unordered_map<string, vector<neighbor>> adjacency_list;
 
 	// populate adjacency list
 	REP(i, 0, size)
@@ -163,7 +165,8 @@ void build_UPGMA(double** dm, u32 size, const vector<seq>& seqs, const string& o
 		run_algorithm(adjacency_list);
 	}
 
-	for (auto node : adjacency_list) {
+	for (auto node : adjacency_list)
+	{
 		write_tree(node.first + ";", outfile);
 	}
 }
