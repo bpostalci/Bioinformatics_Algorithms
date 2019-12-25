@@ -1,10 +1,10 @@
-# c = g++ -O3 -std=c++0x -Wall 
-c = clang++ -O3 -std=c++0x -Wall 
+c = g++ -O3 -std=c++0x -Wall 
+# c = clang++ -O3 -std=c++0x -Wall 
 
 objects = Driver.o IOHelper.o AlignmentCommon.o LocalAlignmentCommon.o NeedlemanWunschAlignment.o\
 		  NeedlemanWunschAffineAlignment.o SmithWatermanAlignment.o SmithWatermanAffineAlignment.o 
 alns = global-naiveGap.aln global-affineGap.aln local-naiveGap.aln local-affineGap.aln
-exe = allalign
+exe = allalign.exe
 
 $(exe): $(objects)
 	$(c) -o $(exe) $(objects)

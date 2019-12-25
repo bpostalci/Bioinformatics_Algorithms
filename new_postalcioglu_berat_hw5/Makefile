@@ -1,4 +1,5 @@
 # c = g++ -g -fsanitize=address -O3 -std=c++0x -Wall 
+# c = g++ -g -O3 -std=c++0x -Wall 
 c = g++ -O3 -std=c++0x -Wall 
 
 objects = objects/Driver.o objects/IOHelper.o objects/NeedlemanWunschAffineAlignment.o objects/MYUPGMA.o

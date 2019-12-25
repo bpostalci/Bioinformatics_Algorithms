@@ -90,7 +90,7 @@ void run_algorithm(unordered_map<string, vector<neighbor>> &al)
 	al.erase(min_neighbor_name);
 
 	// remove erased clusters from other clusters
-	for (const auto& node : al)
+	for (const auto &node : al)
 	{
 		vector<u32> indexes_to_remove;
 		vector<neighbor> neighbors = node.second;
@@ -165,7 +165,7 @@ void build_UPGMA(double **dm, u32 size, const vector<seq> &seqs, const string &o
 		run_algorithm(adjacency_list);
 	}
 
-	for (auto node : adjacency_list)
+	for (const auto &node : adjacency_list)
 	{
 		write_tree(node.first + ";", outfile);
 	}
