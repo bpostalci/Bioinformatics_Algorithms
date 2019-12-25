@@ -26,7 +26,7 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 		exit(1);
 	}
 
-	unordered_set<string> set;
+	// unordered_set<string> set;
 	string line;
 
 	while (getline(file, line))
@@ -36,15 +36,10 @@ void fill_sequences_buff(vector<seq> &seqs, const string &filename)
 			string title = line;
 			getline(file, line);
 			string seq_str = line;
-			if (set.find(title) == set.end() && set.find(seq_str) == set.end())
-			{
-				seq s;
-				s.title = title;
-				s.seq = seq_str;
-				seqs.push_back(s);
-				set.insert(title);
-				set.insert(seq_str);
-			} 
+			seq s;
+			s.title = title;
+			s.seq = seq_str;
+			seqs.push_back(s);
 		}
 	}
 

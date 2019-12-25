@@ -114,7 +114,30 @@ double needleman_wunsch_affine_align(const char *s1, const char *s2, int match, 
     //     cout << "\n";
     // }
 
-    return calculate_edit_distance(matrix_s, s1_len, s2_len);
+    double result = calculate_edit_distance(matrix_s, s1_len, s2_len);
+
+    // free memory
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_s[i]);
+    }
+    free(matrix_s);
+
+    // matrix - E
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_e[i]);
+    }
+    free(matrix_e);
+
+    // matrix - F
+    for (i = 0; i < (s1_len + 1); i++)
+    {
+        free(matrix_f[i]);
+    }
+    free(matrix_f);
+
+    return result;
 }
 
 double calculate_edit_distance(score_item **m, u32 i, u32 j) // i = row, j = col
