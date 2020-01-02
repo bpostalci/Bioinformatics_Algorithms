@@ -40,7 +40,7 @@ double probability(char x, string col)
 string trim(const string &str)
 {
     stringstream ss;
-    for (auto ch : str)
+    for (const auto &ch : str)
     {
         if (ch != ' ')
         {
@@ -160,7 +160,8 @@ void output_result(const vector<string> &profile,
     string new_aln(seq_stream.str());
     reverse(new_aln.begin(), new_aln.end());
 
-    REP(i, 0, profile.size())
+    u32 profile_size = profile.size();
+    REP(i, 0, profile_size)
     {
         string title_cp(profile_titles[i]);
         reverse(title_cp.begin(), title_cp.end());
