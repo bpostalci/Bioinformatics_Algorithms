@@ -1,4 +1,4 @@
-# c = g++ -g -fsanitize=address -O3 -std=c++0x -Wall 
+#c = g++ -g -fsanitize=address -O3 -std=c++0x -Wall 
 # c = g++ -g -O3 -std=c++0x -Wall 
 c = g++ -O3 -std=c++0x -Wall 
 

@@ -13,7 +13,8 @@ using namespace std;
 u32 calc_num_of_nodes(const string &cluster)
 {
 	u32 result = 1;
-	REP(i, 0, cluster.size())
+  u32 cluster_size = cluster.size();
+  REP(i, 0, cluster_size)
 	{
 		if (cluster[i] == ',')
 			result++;
@@ -40,7 +41,6 @@ void run_algorithm(unordered_map<string, vector<neighbor>> &al)
 		}
 	}
 
-	// merge
 	string leftp = "(";
 	string comma = ", ";
 	string rightp = ")";
@@ -118,7 +118,7 @@ void run_algorithm(unordered_map<string, vector<neighbor>> &al)
 		{
 			// find distance to new cluster
 			double distance = 0.0;
-			for (auto neighbor : al[new_name])
+			for (const auto &neighbor : al[new_name])
 			{
 				if (neighbor.name == node.first)
 				{
