@@ -1,5 +1,5 @@
-# General Information
-##### usage: bwtfm [option]
+# Usage
+##### bwtfm [option]
 #####        Options:
 #####        --help                                      :  display help
 #####        --index  [text].fa                          :  outputs [text].fa.bwt and [text].fa.fm index files
