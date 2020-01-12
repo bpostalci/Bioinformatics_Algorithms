@@ -1,6 +1,6 @@
-# General Information
+# Usage
 
-##### usage: buildUPGMA [option] ... [arg]
+##### buildUPGMA [option] ... [arg]
 #####        Options and arguments:
 #####        --ref        or -f  [<filename>.fasta]  : FASTA-formatted file that contains the sequences to index.
 #####        --query      or -o  [<filename>.fasta]  : FASTA-formatted file that contains the sequences to search in reference.
