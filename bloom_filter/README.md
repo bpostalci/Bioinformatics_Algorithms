@@ -1,3 +1,8 @@
 # General Information
-##### bloomFilter --ref reference.fasta --query query.fasta --kmer $kmerLength --bloomsize $size
-Bloom filter implementation to search query FASTA file in a reference FASTA file.
+
+##### usage: buildUPGMA [option] ... [arg]
+#####        Options and arguments:
+#####        --ref        or -f  [<filename>.fasta]  : FASTA-formatted file that contains the sequences to index.
+#####        --query      or -o  [<filename>.fasta]  : FASTA-formatted file that contains the sequences to search in reference.
+#####        --kmer       or -m  [number]            : kmer length.
+#####        --bloomsize  or -g  [number]            : Size of the Bloom filter bit vector in bytes
