@@ -21,7 +21,7 @@ struct prg_options
 };
 
 static const char *help =
-    "usage: buildUPGMA [option] ... [arg]\n\
+    "usage: bloomFilter [option] ... [arg]\n\
 Options and arguments:\n\
 --ref        or -f  [<filename>.fasta]  : FASTA-formatted file that contains the sequences to index.\n\
 --query      or -o  [<filename>.fasta]  : FASTA-formatted file that contains the sequences to search in reference.\n\
