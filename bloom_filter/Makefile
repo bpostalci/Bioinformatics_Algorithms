@@ -1,32 +1,31 @@
 # c = g++ -g -fsanitize=address -O3 -std=c++0x -Wall 
-# c = g++ -g -O3 -std=c++0x -Wall 
-c = g++ -O3 -std=c++0x -Wall 
+c=g++ 
+cflags=-O3 -std=c++0x -Wall
 
-objects = objects/Driver.o objects/IOHelper.o objects/Murmur2.o objects/Bloomfilter.o objects/Jenkins.o objects/FNV.o
-exe = bloomFilter 
-common_headers = helpers/IOHelper.h data_structures/Typedefs.h
+targets=objects/Driver.o objects/IOHelper.o objects/Murmur2.o objects/Bloomfilter.o objects/Jenkins.o objects/FNV.o
+exe=bloomFilter 
+common_headers=helpers/IOHelper.h data_structures/Typedefs.h
 
-$(exe): $(objects)
-	$(c) -o $(exe) $(objects)
+# hash algorithms paths 
+murmur2_path=algos/Murmur2
+jenkins_path=algos/Jenkins
+fnv_path=algos/FNV
 
+all: $(targets) 
+	$(c) $(cflags) -o $(exe) $(targets)
 objects/Driver.o: Driver.cpp $(common_headers)
-	$(c) -c Driver.cpp -o objects/Driver.o
-
+	$(c) $(cflags) -c Driver.cpp -o $@
 objects/Bloomfilter.o: data_structures/Bloomfilter.cpp data_structures/Typedefs.h
-	$(c) -c data_structures/Bloomfilter.cpp -o objects/Bloomfilter.o
-
+	$(c) $(cflags) -c data_structures/Bloomfilter.cpp -o $@ 
 objects/IOHelper.o: helpers/IOHelper.cpp $(common_headers)
-	$(c) -c helpers/IOHelper.cpp -o objects/IOHelper.o
-
-objects/Murmur2.o: algos/Murmur2.cpp algos/Murmur2.h data_structures/Typedefs.h
-	$(c) -c algos/Murmur2.cpp -o objects/Murmur2.o
-
-objects/Jenkins.o: algos/Jenkins.cpp algos/Jenkins.h data_structures/Typedefs.h
-	$(c) -c algos/Jenkins.cpp -o objects/Jenkins.o
-
-objects/FNV.o: algos/FNV.cpp algos/FNV.h data_structures/Typedefs.h
-	$(c) -c algos/FNV.cpp -o objects/FNV.o
+	$(c) $(cflags) -c helpers/IOHelper.cpp -o $@
+objects/Murmur2.o: $(wildcard $(murmur2_path)/*) data_structures/Typedefs.h
+	$(c) $(cflags) -c $(wildcard algos/Murmur2/*.cpp) -o $@
+objects/Jenkins.o: $(wildcard $(jenkins_path)*) data_structures/Typedefs.h
+	$(c) $(cflags) -c $(wildcard algos/Jenkins/*.cpp) -o $@
+objects/FNV.o: $(wildcard $(fnv_path)/*)  data_structures/Typedefs.h
+	$(c) $(cflags) -c $(wildcard algos/FNV/*.cpp) -o $@
 
 .PHONY: clean
 clean:
-	rm $(objects) $(exe)
+	rm $(targets) $(exe)

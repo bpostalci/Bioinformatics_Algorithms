@@ -1,9 +1,9 @@
 #include "helpers/IOHelper.h"
 #include "data_structures/Typedefs.h"
 #include "data_structures/Bloomfilter.h"
-#include "algos/Murmur2.h"
-#include "algos/Jenkins.h"
-#include "algos/FNV.h"
+#include "algos/Murmur2/Murmur2.h"
+#include "algos/Jenkins/Jenkins.h"
+#include "algos/FNV/FNV.h"
 #include <iostream>
 #include <vector>
 #include <functional>
